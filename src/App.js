@@ -4,7 +4,11 @@ import Routes from './router';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Header from './components/header'
+import Header from './components/header';
+
+import './style/index.scss'
+
+
 
 function App() {
   return (
