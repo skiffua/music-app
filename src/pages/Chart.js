@@ -1,7 +1,7 @@
 import React from "react";
 
 const Chart = () => {
-    return <div>Чарт</div>
+    return <div>chart</div>
 };
 
 export default Chart
