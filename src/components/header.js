@@ -15,50 +15,13 @@ const Header = () => {
                     <Nav className="ml-auto">
                         <Nav.Link href="/">Home</Nav.Link>
                         <Nav.Link href="chart">Чарт</Nav.Link>
+                        <Nav.Link href="sign-in">Реєстрація</Nav.Link>
+                        <Nav.Link href="sign-in">Вхід</Nav.Link>
                         <Nav.Link href="about">Про нас</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
         </Navbar>
-
-
-
-
-        // <nav className="navbar navbar-expand-sm navbar-dark bg-dark top-bar">
-        //     <div className="container">
-        //         <Link to="/" className="navbar-brand">
-        //             Гарбуз
-        //         </Link>
-        //
-        //
-        //         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-        //                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        //             <span className="navbar-toggler-icon"></span>
-        //         </button>
-        //
-        //         <div className="collapse navbar-collapse" id="navbarNav">
-        //             <ul className="navbar-nav ml-auto flex-nowrap">
-        //                 <li className="nav-item">
-        //                     <NavLink to='/' className="nav-link" exact>
-        //                         Home
-        //                     </NavLink>
-        //                 </li>
-        //                 <li className="nav-item">
-        //                     <NavLink to='/chart' className="nav-link">
-        //                         Chart
-        //                     </NavLink>
-        //                 </li>
-        //                 <li className="nav-item">
-        //                     <NavLink to='/about' className="nav-link">
-        //                         About
-        //                     </NavLink>
-        //                 </li>
-        //             </ul>
-        //         </div>
-        //
-        //
-        //     </div>
-        // </nav>
     )
 };
 
