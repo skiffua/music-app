@@ -8,7 +8,7 @@ import {Container} from "react-bootstrap";
 
 const Header = () => {
     return (
-        <Navbar bg="dark" expand="sm">
+        <Navbar bg="dark" variant="dark" expand="sm">
             <Container>
                 <Navbar.Brand href="/">Гарбуз</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
