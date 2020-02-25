@@ -13,10 +13,10 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
-                        <Nav.Link href="/">Home</Nav.Link>
+                        <Nav.Link href="/">Домівка</Nav.Link>
                         <Nav.Link href="chart">Чарт</Nav.Link>
-                        <Nav.Link href="sign-in">Реєстрація</Nav.Link>
-                        <Nav.Link href="sign-in">Вхід</Nav.Link>
+                        <Nav.Link href="register">Реєстрація</Nav.Link>
+                        <Nav.Link href="login">Вхід</Nav.Link>
                         <Nav.Link href="about">Про нас</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
