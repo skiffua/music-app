@@ -8,7 +8,8 @@ export default () => {
         <Switch>
             <Route path='/' exact component = { Home } />
             <Route path='/chart' component = { Chart } />
-            <Route path='/sign-in' component = { Authentication } />
+            <Route path='/register' component = { Authentication } />
+            <Route path='/login' component = { Authentication } />
             <Route path='/about' component = { About } />
         </Switch>
     )
