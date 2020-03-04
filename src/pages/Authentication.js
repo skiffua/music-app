@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import { Link } from 'react-router-dom';
-
 import Form from 'react-bootstrap/Form';
 import {Container} from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 
-import './authentication.scss';
+import { SERVER_ROUTES, USERS_FIELDS } from '../constants/api';
+import '../styles/authentication.scss';
+
+import useFetch from "../hooks/useFetch";
 
 const Authentication = () => {
     const [email, setEmail] = useState('');
+    const [nick, setNick] = useState('');
     const [password, setPassword] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [{response, isLoading, error}, doFetch] = useFetch(SERVER_ROUTES.REGISTER);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setIsSubmitting(true);
+        doFetch({
+            [USERS_FIELDS.USER_EMAIL]: email,
+            [USERS_FIELDS.USER_NICK]: nick,
+            [USERS_FIELDS.USER_PASSWORD]: password
+        })
     };
-
-    useEffect(() => {
-        if (!isSubmitting) {
-            return;
-        }
-       console.log('effect trigger');
-    }, );
 
     return (
         <Container className="mt-3">
@@ -43,6 +44,16 @@ const Authentication = () => {
                                 onChange={e => setEmail(e.target.value)}
                                 placeholder="Enter email" />
                         </Form.Group>
+                        <Form.Group controlId="formGroupNick">
+                            <Form.Label>Nick</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={nick}
+                                onChange={e => setNick(e.target.value)}
+                                placeholder="Enter nick"
+                                autoComplete="off"
+                            />
+                        </Form.Group>
                         <Form.Group controlId="formGroupPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control
@@ -51,12 +62,18 @@ const Authentication = () => {
                                 onChange={e => setPassword(e.target.value)}
                                 placeholder="Password" />
                         </Form.Group>
-
+                        {(response || error) &&
+                            <Form.Group controlId="formGroupServerMessages">
+                                <Form.Text className={response ? response.class : error.class}>
+                                   {response ? response.message : error.message}
+                                </Form.Text>
+                            </Form.Group>
+                        }
                         <Button
                             variant="primary"
                             className="float-right"
                             type="submit"
-                            disabled={isSubmitting}
+                            disabled={isLoading}
                         >
                             Вхід
                         </Button>

@@ -4,7 +4,7 @@ import Routes from './router';
 
 import Header from './components/header';
 
-import './style/index.scss';
+import './styles/index.scss';
 
 function App() {
   return (
