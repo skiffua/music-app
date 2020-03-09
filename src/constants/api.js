@@ -5,10 +5,11 @@ const SERVER_ROUTES = {
     REGISTER: API_SERVER + '/api/register'
 };
 
-const USERS_FIELDS = {
-    USER_EMAIL: 'userEmail',
-    USER_PASSWORD: 'userPassword',
-    USER_NICK: 'nick'
+const USER_FIELDS = {
+    USER_EMAIL: 'email',
+    USER_PASSWORD: 'password',
+    USER_NICK: 'nick',
+    USER_GENDER: 'gender'
 };
 
-export { SERVER_ROUTES, USERS_FIELDS };
+export { SERVER_ROUTES, USER_FIELDS };
