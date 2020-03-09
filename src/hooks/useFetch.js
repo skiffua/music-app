@@ -16,19 +16,19 @@ export default url => {
         if (!isLoading) {
             return;
         }
+
         axios.post(url, options)
             .then((res) => {
-                setResponse({
-                    message: res.data.message,
-                    class: res.status === 201 ? 'text-success' : 'text-warning'
-                });
+                setResponse(res);
             })
-            .catch((e) => {
-                setError({
-                    message: 'connecting fail, please try again:)',
-                    class: 'text-danger'
-                });
-                console.log(e);
+            .catch((error) => {
+                if (error.response.status === 404) {
+                    setResponse(error.response);
+                } else {
+                    setError({
+                        message: 'connecting fail, please try again:)',
+                    })
+                };
             })
             .finally(() => {
                 setTimeout(() => {
