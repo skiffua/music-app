@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
@@ -53,6 +54,7 @@ module.exports = {
         }),
         new webpack.SourceMapDevToolPlugin({
             filename: 'sourcemaps/source.js.map',
-        })
+        }),
+        new Dotenv()
     ]
 };

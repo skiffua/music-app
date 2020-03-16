@@ -3,17 +3,18 @@ import { BrowserRouter } from "react-router-dom";
 import Routes from './router';
 
 import Header from './components/header';
+import { CurrentUserProvider } from './context/currentUser';
 
-import './style/index.scss';
+import './styles/index.scss';
 
 function App() {
   return (
-    <div className="App">
+      <CurrentUserProvider>
         <BrowserRouter>
             <Header/>
             <Routes />
         </BrowserRouter>
-    </div>
+      </CurrentUserProvider>
   );
 }
 
