@@ -1,4 +1,4 @@
-const API_SERVER = ''; // TODO change to heroku http://localhost:8080
+const API_SERVER = `${process.env.HOST}:${process.env.PORT}`; // TODO change to heroku http://localhost:8080
 
 const SERVER_ROUTES = {
     LOGIN: API_SERVER + '/api/login',

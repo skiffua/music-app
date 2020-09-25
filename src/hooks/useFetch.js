@@ -28,7 +28,7 @@ export default url => {
                     setError({
                         message: 'connecting fail, please try again:)',
                     })
-                };
+                }
             })
             .finally(() => {
                 setTimeout(() => {
@@ -39,5 +39,5 @@ export default url => {
             });
     }, [isLoading]);
 
-    return [{isLoading, response, error}, doFetch]
+    return [{ isLoading, response, error }, doFetch]
 };
