@@ -30,8 +30,8 @@ export const RadioInput = ({ children, ...props }) => {
             <FormCheck
                 { ...field }
                 { ...props }
-                type="radio"
-                label={ children }
+                type = "radio"
+                label = { children }
             />
         </>
     );

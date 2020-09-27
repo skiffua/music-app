@@ -17,6 +17,7 @@ const Header = () => {
                         <Nav.Link href="chart">Чарт</Nav.Link>
                         <Nav.Link href="register">Реєстрація</Nav.Link>
                         <Nav.Link href="login">Вхід</Nav.Link>
+                        <Nav.Link>Вихід</Nav.Link>
                         <Nav.Link href="about">Про нас</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>

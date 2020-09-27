@@ -1,6 +1,9 @@
 const webpack = require("webpack");
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const env = process.env.NODE_ENV || 'development';
+
+console.log('ENV', env);
 
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
@@ -41,6 +44,7 @@ module.exports = {
         ]
     },
     devServer: {
+        host: '0.0.0.0',
         port: 3000,
         historyApiFallback: true,
         compress: true,
@@ -55,6 +59,8 @@ module.exports = {
         new webpack.SourceMapDevToolPlugin({
             filename: 'sourcemaps/source.js.map',
         }),
-        new Dotenv()
+        new Dotenv({
+            path: `./.env.${env === "production" ? "prod" : "dev"}`,
+        })
     ]
 };
