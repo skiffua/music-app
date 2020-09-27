@@ -17,8 +17,7 @@ config({
 });
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
+// const server = http.createServer(app);
 
 app.use(bodyParser.json({ limit: '2mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -33,11 +32,12 @@ app.get('*', (req, res) => {
 routes(app);
 console.log('process.env.PORT', process.env.PORT);
 
-app.listen(process.env.PORT || 8080, () => {
+const server = app.listen(process.env.PORT || 8080, () => {
     console.log('server worked!');
 });
 
-io.listen(process.env.SOCKET_PORT || 6969);
+const io = socketIO(server);
+// io.listen(process.env.SOCKET_PORT || 6969);
 
 io.on('connection', (client) => {
     client.on('subscribeToTimer', (interval) => {
