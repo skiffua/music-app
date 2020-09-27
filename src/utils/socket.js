@@ -1,6 +1,8 @@
 import openSocket from 'socket.io-client';
 // TODO change to heroku
-const socket = openSocket(`${process.env.HOST}:${process.env.SOCKET_PORT}`);
+const socketHost = process.env.NODE_ENV === 'development'
+    ? `${process.env.HOST}:${process.env.PORT}` : '';
+const socket = openSocket(socketHost);
 
 function subscribeToTimer(cb) {
     socket.on('timer', timestamp => cb(null, timestamp));
