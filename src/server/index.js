@@ -9,6 +9,8 @@ import { config } from 'dotenv';
 
 import path from 'path';
 import routes from './api/api';
+import { checkChartMessage } from "./validation/validation";
+import {chartMessageLength} from "./validation/constants";
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -53,6 +55,12 @@ io.on('connection', (client) => {
 
     const sendToClient = (data) => {
         console.log(data);
+
+        if (checkChartMessage(data.message)) {
+
+            io.emit('newMessageError', { message: `Повідомлення повинно бути коротшим ${chartMessageLength} символів` });
+            return;
+        }
 
         io.emit('newMessage', { userName: data.userName, message: data.message });
     }

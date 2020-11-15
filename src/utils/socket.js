@@ -17,6 +17,15 @@ function subscribeToMessages(cb) {
     );
 }
 
+function subscribeToErrorMessage(cb) {
+    socket.on('newMessageError', message => {
+
+            console.log('error 50');
+            return cb(null, message)
+        }
+    );
+}
+
 function sendMessage(userName, message) {
     socket.emit('sendMessage', { userName, message});
 }
@@ -25,4 +34,5 @@ export {
     subscribeToTimer,
     subscribeToMessages,
     sendMessage,
+    subscribeToErrorMessage,
 };

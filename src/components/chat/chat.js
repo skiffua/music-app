@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { subscribeToMessages, sendMessage } from '../../utils/socket';
+import {subscribeToMessages, sendMessage, subscribeToErrorMessage} from '../../utils/socket';
 
 import './chat.scss';
 import { Container } from "react-bootstrap";
@@ -16,6 +16,7 @@ const Chat = () => {
     const [message, setMessage] = useState('');
     const [userName, setUsername] = useState('');
     const [messagesFromServer, setMessageFromServer] = useState([]);
+    const [errorChatMessage, setErrorChatMessage] = useState('');
 
     const test = useRef(null);
 
@@ -23,6 +24,11 @@ const Chat = () => {
         subscribeToMessages((err, message) => {
             // setUsername(message.userName);
             return printNewMessage(message);
+        });
+
+        subscribeToErrorMessage((err, message) => {
+            // setUsername(message.userName);
+            return setErrorChatMessage(message.message);
         });
     }, []);
 
@@ -35,6 +41,7 @@ const Chat = () => {
     };
 
     const printNewMessage = (message) => {
+        setMessage('');
         setMessageFromServer(messagesFromServer => [ ...messagesFromServer, message ]);
     };
 
@@ -48,8 +55,11 @@ const Chat = () => {
             setUsername(userNickName);
         }
 
-        setMessage('');
         sendMessage(userNickName, message);
+    };
+
+    const resetErrorMessage = () => {
+        setErrorChatMessage('')
     };
 
     const generateFunnyUserName = () => {
@@ -59,7 +69,7 @@ const Chat = () => {
      return (
             <Container
                 fluid
-                className="d-flex flex-column justify-content-between chat-container p-0"
+                className="d-flex flex-column justify-content-between chat chat-container p-0"
             >
                 <Col
                     className="chat-items flex-grow-1"
@@ -79,7 +89,7 @@ const Chat = () => {
                 >
                     <Form.Group
                         controlId="formBasicEmail"
-                        className="flex-grow-1 mb-0 mr-2"
+                        className="flex-grow-1 mb-0 mr-2 control-block"
                     >
                         <Form.Control
                             placeholder="назвись..."
@@ -89,11 +99,13 @@ const Chat = () => {
                             onChange={ (e) => { setUsername(e.target.value); }}
                             className="chat-input--user"
                         />
+                        <span className="chat-error-message">{errorChatMessage}</span>
                         <Form.Control
                             value={ message }
                             type="text"
                             autoComplete="off"
                             onChange={ (e) => { setMessage(e.target.value); }}
+                            onInput={() => resetErrorMessage()}
                         />
                     </Form.Group>
 
