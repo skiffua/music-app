@@ -1,8 +1,8 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
-import './audio-player.scss';
+import './playlist.scss';
 
-const AudioPlayer = () => {
+const Playlist = () => {
 
      return (
          <Card
@@ -33,4 +33,4 @@ const AudioPlayer = () => {
         );
 };
 
-export default AudioPlayer
+export default Playlist

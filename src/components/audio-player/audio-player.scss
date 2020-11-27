@@ -1,0 +1,48 @@
+@import '../../styles/_variables.scss';
+
+$player-button-size: 40px;
+
+@mixin hoverButton($image) {
+    background-image: url($image), radial-gradient(circle, white 10%, $main-brown-lighten 80%);
+}
+
+@mixin backgroundButton($image) {
+    background-image: url($image);
+    &:hover {
+        @include hoverButton($image);
+    }
+    &.is-checked {
+        @include hoverButton($image);
+        box-shadow: 0 0 10px $main-darken;
+    }
+
+}
+
+.audio-player {
+    .controls-inner {
+        .controls-btn {
+            width: $player-button-size;
+            height: $player-button-size;
+            background-repeat: no-repeat;
+            background-size: contain;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .play-btn {
+            @include backgroundButton('../../assets/icons/play.svg');
+        }
+        .pause-btn {
+            @include backgroundButton('../../assets/icons/pause.svg');
+        }
+        .stop-btn {
+            @include backgroundButton('../../assets/icons/stop.svg');
+        }
+        .prev-btn {
+            @include backgroundButton('../../assets/icons/prev.svg');
+        }
+        .next-btn {
+            @include backgroundButton('../../assets/icons/next.svg');
+        }
+    }
+}
