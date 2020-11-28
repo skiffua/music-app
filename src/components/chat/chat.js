@@ -9,6 +9,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import AudioPlayer from '../audio-player/audio-player.js';
+import Playlist from '../playlist/playlist.tsx';
 
 import { CHAT_USERS_FUNNY_NAMES } from './nick-names.constants';
 
@@ -73,7 +74,8 @@ const Chat = () => {
                 fluid
                 className="d-flex flex-grow-1 flex-column justify-content-between chat p-0"
             >
-                <Row>
+                <Row className="flex-column">
+                    <Playlist />
                     <AudioPlayer />
                 </Row>
                 <Row className="m-0 chat-container flex-column flex-grow-1">

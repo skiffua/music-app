@@ -7,7 +7,6 @@ const AudioPlayer = () => {
      return (
          <Card
              className="audio-player p-0 flex-grow-1"
-             style={{ width: '18rem' }}
          >
              <Card.Body
                  className="flex-grow-1 p-2"

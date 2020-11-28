@@ -27,6 +27,13 @@ module.exports = {
                 }
             },
             {
+                test: /\.tsx?$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'ts-loader'
+                }
+            },
+            {
                 test: /\.s[ac]ss$/i,
                 use: [
                     // Creates `style` nodes from JS strings
