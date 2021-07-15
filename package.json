@@ -48,7 +48,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "heroku-prebuild": "npm install --dev && npm run build:client",
-    "heroku-app": "babel-watch --exec @babel-node ./src/server/index.js"
+    "heroku-app": "babel-watch ./src/server/index.js"
   },
   "eslintConfig": {
     "extends": "react-app"
