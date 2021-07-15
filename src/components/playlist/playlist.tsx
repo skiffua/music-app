@@ -33,7 +33,8 @@ const Playlist = (props): any => {
 
      return (
          <ListGroup>
-             {props.songsDataProp.songList.map((audioTrack: playlistTrack, index: number) => {
+             {props.songsDataProp.songList && props.songsDataProp.songList
+                 .map((audioTrack: playlistTrack, index: number) => {
                  return (
                      <ListGroup.Item
                          action
