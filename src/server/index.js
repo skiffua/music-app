@@ -27,7 +27,7 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, '/../../dist')));
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../dist/index.html'));
 });
 
@@ -43,7 +43,6 @@ const io = socketIO(server);
 
 io.on('connection', (client) => {
     client.on('subscribeToTimer', (interval) => {
-        console.log('client is subscribing to timer with interval ', interval);
         setInterval(() => {
             client.emit('timer', new Date());
         }, interval);
@@ -54,7 +53,6 @@ io.on('connection', (client) => {
     });
 
     const sendToClient = (data) => {
-        console.log(data);
 
         if (checkChartMessage(data.message)) {
 

@@ -1,14 +1,19 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-export default url => {
+export default () => {
     const [isLoading, setIsLoading] = useState(false);
     const [response, setResponse] = useState(null);
     const [error, setError] = useState(null);
-    const [options, setOptions] = useState({});
+    const [url, setUrl] = useState('');
+    const [config, setConfig] = useState({});
+    const [payload, setPayload] = useState({});
+    const defaultFetchConfig = { method: 'post' };
 
-    const doFetch = (options = {}) => {
-        setOptions(options);
+    const doFetch = (url, config = defaultFetchConfig, payload = {}) => {
+        setUrl(url);
+        setConfig(config);
+        setPayload(payload);
         setIsLoading(true);
     };
 
@@ -17,14 +22,12 @@ export default url => {
             return;
         }
 
-        axios.post(url, options)
+        const handleRequest = (promise) => promise
             .then((res) => {
                 setResponse(res);
             })
             .catch((error) => {
                 if (error.response.status === 404) {
-                    setResponse(error.response);
-                } else {
                     setError({
                         message: 'connecting fail, please try again:)',
                     })
@@ -32,11 +35,22 @@ export default url => {
             })
             .finally(() => {
                 setTimeout(() => {
-                    setResponse(null);
                     setError(null);
                     setIsLoading(false);
                 }, 5000);
             });
+
+        switch (config.method) {
+            case 'get': {
+
+                handleRequest(axios.get(url));
+                break;
+            }
+            default: {
+
+                handleRequest(axios.post(url, payload));
+            }
+        }
     }, [isLoading]);
 
     return [{ isLoading, response, error }, doFetch]

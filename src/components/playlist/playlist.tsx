@@ -1,10 +1,15 @@
 // import './playlist.scss';
 
 import * as React from "react";
-import {ListGroup} from "react-bootstrap";
+import { connect } from 'react-redux';
+import { ListGroup } from "react-bootstrap";
 
-const Playlist = (): any => {
-    interface playlistTracks {
+import {Howl, Howler} from 'howler';
+
+import { SERVER_ROUTES } from '../../constants/api';
+
+const Playlist = (props): any => {
+    interface playlistTrack {
         id: number;
         author: string;
         trackName: string;
@@ -12,27 +17,41 @@ const Playlist = (): any => {
         position?: number;
     }
 
-    const playlistTracksMock: playlistTracks[] = [
-        {
-            id: 1,
-            author: 'author1',
-            trackName: 'trackName1',
-            duration: 180,
-        },
-        {
-            id: 2,
-            author: 'author2',
-            trackName: 'trackName2',
-            duration: 180,
-        }];
+    const getAudioTrack = (audioTrack: playlistTrack) => {
+
+        const sound = new Howl({
+            src: `${SERVER_ROUTES.LOAD_SONG}${audioTrack.id}`,
+            format: ['mp3'],
+        });
+
+        sound.play();
+
+        // sound.onLoad(() => {
+        //     sound.play()
+        // })
+    };
 
      return (
          <ListGroup>
-             {playlistTracksMock.map((audioTrack: playlistTracks, index: number) => {
-                 return (<ListGroup.Item key={index}>{audioTrack.author}: {audioTrack.trackName} - {audioTrack.duration}</ListGroup.Item>);
+             {props.songsDataProp.songList.map((audioTrack: playlistTrack, index: number) => {
+                 return (
+                     <ListGroup.Item
+                         action
+                         key={index}
+                         onClick={() => getAudioTrack(audioTrack)}
+                     >
+                         {index + 1}. {audioTrack.author}: {audioTrack.trackName} - {audioTrack.duration}
+                     </ListGroup.Item>
+                 );
              })}
          </ListGroup>
         );
 };
 
-export default Playlist;
+const mapStateToProps = state => ({
+    songsDataProp: state.songsData,
+});
+
+export default connect(
+    mapStateToProps,
+)(Playlist);

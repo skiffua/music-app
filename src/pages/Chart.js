@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect } from 'react-redux';
 
 import Chat from '../components/chat/chat';
 
-import '../styles/chart.scss';
+import useFetch from "../hooks/useFetch";
 
-const Chart = () => {
+import '../styles/chart.scss';
+import { SERVER_ROUTES } from "../constants/api";
+import { getSongsList } from "../store/actions/songsActions";
+
+const Chart = (props) => {
+    const [{isLoading, response, error}, doFetch] = useFetch();
+
+    useEffect(() => {
+            doFetch(SERVER_ROUTES.SONGS, { method: 'get'});
+        },
+        []);
+
+    useEffect(() => {
+
+            if (response) { props.getSongsListToProp(response.data);}
+        },
+        [response]);
+
     return (
         <div
             className="chart-container"
@@ -15,4 +33,9 @@ const Chart = () => {
     )
 };
 
-export default Chart
+export default connect(
+    undefined,
+    {
+        getSongsListToProp: getSongsList,
+    }
+)(Chart)

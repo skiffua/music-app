@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom'
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {Container} from "react-bootstrap";
@@ -13,12 +14,12 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
-                        <Nav.Link href="/">Домівка</Nav.Link>
-                        <Nav.Link href="chart">Чарт</Nav.Link>
-                        <Nav.Link href="register">Реєстрація</Nav.Link>
-                        <Nav.Link href="login">Вхід</Nav.Link>
+                        <Nav.Link as={Link} to="/">Домівка</Nav.Link>
+                        <Nav.Link as={Link} to="chart">Чарт</Nav.Link>
+                        <Nav.Link as={Link} to="register">Реєстрація</Nav.Link>
+                        <Nav.Link as={Link} to="login">Вхід</Nav.Link>
                         <Nav.Link>Вихід</Nav.Link>
-                        <Nav.Link href="about">Про нас</Nav.Link>
+                        <Nav.Link as={Link} to="about">Про нас</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
