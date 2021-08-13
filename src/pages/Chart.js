@@ -27,7 +27,6 @@ const Chart = (props) => {
         <div
             className="chart-container"
         >
-            Чарт
             <Chat />
         </div>
     )

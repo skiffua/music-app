@@ -1,4 +1,4 @@
-import ACTION_ERROR from "../actions/types.js";
+import { ACTION_ERROR } from "../actions/types.js";
 
 const songsStoreInitial = {
     userName: '',

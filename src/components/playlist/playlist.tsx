@@ -7,6 +7,8 @@ import { ListGroup } from "react-bootstrap";
 
 import { Howl } from 'howler';
 
+import { setActiveSong } from "../../store/actions/songsActions";
+
 import { SERVER_ROUTES } from '../../constants/api';
 
 const Playlist = (props): any => {
@@ -29,7 +31,8 @@ const Playlist = (props): any => {
         const sound = new Howl({
             src: `${SERVER_ROUTES.LOAD_SONG}${audioTrackId}`,
             format: ['mp3'],
-            onload: (s) => {
+            onload: () => {
+                props.setActiveSongToState(sound);
                 setNewSongId(audioTrackId);
                 setNewSong(sound);
                 },
@@ -75,4 +78,7 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
+    {
+        setActiveSongToState: setActiveSong,
+    }
 )(Playlist);

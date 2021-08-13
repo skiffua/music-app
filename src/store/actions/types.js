@@ -1,9 +1,6 @@
 // audio songs actions
-const GET_SONGS_LIST = 'GET_SONGS_LIST';
+export const SET_SONGS_LIST = 'SET_SONGS_LIST';
+export const SET_CURRENT_SONG = 'SET_CURRENT_SONG';
 
 // actions arrors
-const ACTION_ERROR = 'ACTION_ERROR';
-
-export default {
-    GET_SONGS_LIST,
-}
+export const ACTION_ERROR = 'ACTION_ERROR';

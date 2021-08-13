@@ -1,28 +1,29 @@
-import GET_SONGS_LIST from "../actions/types.js";
+import { SET_SONGS_LIST, SET_CURRENT_SONG } from "../actions/types";
 
 interface SongsStore {
     songList: any[],
-    songPlaying: {
-        activeSongId: number | null,
-        isPlaying: boolean,
-    },
+    songPlaying: any,
 }
 
 const songsStoreInitial: SongsStore = {
     songList: [],
-    songPlaying: {
-        activeSongId: null,
-        isPlaying: false,
-    },
+    songPlaying: null,
 };
 
 const songsReducer = (state = songsStoreInitial, action) => {
     switch (action.type) {
-        case GET_SONGS_LIST: {
+        case SET_SONGS_LIST: {
             const songsList = action.payload;
             return {
                 ...state,
                 songList: songsList,
+            };
+        }
+        case SET_CURRENT_SONG: {
+            const currentSong = action.payload;
+            return {
+                ...state,
+                songPlaying: currentSong,
             };
         }
         default: return state;
