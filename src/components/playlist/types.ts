@@ -1,3 +1,6 @@
 export interface PlayerInterface {
-    instance: any;
+    src: string;
+    format?: string[],
+    onload?: () => any;
+    onend?: () => any;
 }

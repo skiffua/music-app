@@ -6,10 +6,12 @@ import { connect } from 'react-redux';
 import { ListGroup } from "react-bootstrap";
 
 import { Howl } from 'howler';
+import { Player } from "./player";
 
 import { setActiveSong } from "../../store/actions/songsActions";
 
 import { SERVER_ROUTES } from '../../constants/api';
+import {platform} from "os";
 
 const Playlist = (props): any => {
     interface playlistTrack {
@@ -20,28 +22,37 @@ const Playlist = (props): any => {
         position?: number;
     }
 
-    const [currentSong, setNewSong] = useState(null);
-    const [currentSongId, setNewSongId] = useState(null);
-
     const getAudioTrack = (audioTrackId: number) => {
-        if (currentSongId) {
-            currentSong.unload();
-        }
 
-        const sound = new Howl({
-            src: `${SERVER_ROUTES.LOAD_SONG}${audioTrackId}`,
-            format: ['mp3'],
-            onload: () => {
-                props.setActiveSongToState(sound);
-                setNewSongId(audioTrackId);
-                setNewSong(sound);
-                },
+        console.log('audioTrackId', audioTrackId);
+
+        const sound = Player.createInstance({
+            src: `${audioTrackId}`,
             onend: () => {
                 getAudioTrack(getNextSongNumber(audioTrackId))
             },
         });
 
-        sound.play();
+        if (sound.playing()) {
+            sound.seek(0);
+        } else {
+            sound.play();
+            Player.getContext();
+            setInterval(() => Player.getFrequency(), 1000)
+        }
+
+    //     const sound = new Howl({
+    //         src: `${SERVER_ROUTES.LOAD_SONG}${audioTrackId}`,
+    //         format: ['mp3'],
+    //         onload: () => {
+    //             props.setActiveSongToState(sound);
+    //             setNewSongId(audioTrackId);
+    //             setNewSong(sound);
+    //             },
+    //         onend: () => {
+    //             getAudioTrack(getNextSongNumber(audioTrackId))
+    //         },
+    //     });
     };
 
     const getNextSongNumber = (currentNumber: number): number => {

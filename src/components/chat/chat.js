@@ -8,8 +8,8 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import AudioPlayer from '../audio-player/audio-player.js';
-import Playlist from '../playlist/playlist.tsx';
+import AudioPlayer from '../audio-player/audio-player';
+import Playlist from '../playlist/playlist';
 
 import { CHAT_USERS_FUNNY_NAMES } from './nick-names.constants';
 
