@@ -1,17 +1,14 @@
 // import './playlist.scss';
-
 import * as React from "react";
-import { useState } from "react";
 import { connect } from 'react-redux';
 import { ListGroup } from "react-bootstrap";
 
 import { Howl } from 'howler';
-import { Player } from "./player";
+import {Analyser, Player, PlayerInstance} from "./player";
 
 import { setActiveSong } from "../../store/actions/songsActions";
-
-import { SERVER_ROUTES } from '../../constants/api';
-import {platform} from "os";
+import { useEffect } from "react";
+import {eventBus} from "../../event-bus/event-bus";
 
 const Playlist = (props): any => {
     interface playlistTrack {
@@ -22,24 +19,36 @@ const Playlist = (props): any => {
         position?: number;
     }
 
+    // useEffect(() => {
+    //     console.log('PlayerInstance', PlayerInstance);
+    //     if (PlayerInstance?.isEnd) {
+    //         console.log('PlayerInstance', PlayerInstance?.isEnd);
+    //
+    //         getAudioTrack(getNextSongNumber(1))
+    //     }
+    // }, [PlayerInstance]);
+
     const getAudioTrack = (audioTrackId: number) => {
-
-        console.log('audioTrackId', audioTrackId);
-
-        const sound = Player.createInstance({
+        const sound: Howl = Player.createInstance({
             src: `${audioTrackId}`,
-            onend: () => {
-                getAudioTrack(getNextSongNumber(audioTrackId))
-            },
+            // onend: () => {
+            //     getAudioTrack(getNextSongNumber(audioTrackId))
+            // },
+        });
+
+        sound.on('end', () => {
+            getAudioTrack(getNextSongNumber(audioTrackId))
         });
 
         if (sound.playing()) {
             sound.seek(0);
         } else {
             sound.play();
-            Player.getContext();
-            setInterval(() => Player.getFrequency(), 1000)
+            // Player.createAnalyser();
+            // setInterval(() => Player.getFrequency(), 1000)
         }
+
+        eventBus.dispatch("onPlaySong");
 
     //     const sound = new Howl({
     //         src: `${SERVER_ROUTES.LOAD_SONG}${audioTrackId}`,

@@ -3,4 +3,5 @@ export interface PlayerInterface {
     format?: string[],
     onload?: () => any;
     onend?: () => any;
+    onplay?: () => any;
 }

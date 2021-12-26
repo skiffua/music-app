@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from 'react-redux';
 
 import Chat from '../components/chat/chat';
+import Equalizer from '../components/equalizer/equalizer';
 
 import useFetch from "../hooks/useFetch";
 
@@ -27,6 +28,7 @@ const Chart = (props) => {
         <div
             className="chart-container"
         >
+            <Equalizer />
             <Chat />
         </div>
     )

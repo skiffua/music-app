@@ -2,93 +2,64 @@ import { Howl, Howler } from 'howler';
 import {PlayerInterface} from "./types";
 import { SERVER_ROUTES } from '../../constants/api';
 
-// export class Player {
-//     private static instance = null;
-//     public onend: () => {};
-//     public onload: () => {};
-//
-//     constructor(options: PlayerInterface) {
-//         Player.instance = new Howl(options);
-//         this.onload = options.onload;
-//         this.onend = options.onend;
-//     }
-//
-//     static getInstance(options: PlayerInterface) {
-//         if (!Player.instance) {
-//             Player.instance = new Howl(options);
-//             // Player.instance = new Player(options);
-//         }
-//
-//         console.log('Player.instance2', Player.instance);
-//
-//         return Player.instance;
-//     }
-// }
-
-export let PlayerInstance: Player | null = null;
+export let PlayerInstance: Howl | null = null;
+export let AnalyserInstance: AnalyserNode | null = null;
 
 export class Player {
-    private static instance: Howl | null = null;
-    private static analyser: AnalyserNode | null = null;
-    private static dataArray = null;
-    public src = '';
-    public onend: () => {};
-    public onload: () => {};
-
-    constructor(options: PlayerInterface) {
+    static createInstance(options: PlayerInterface) {
         const mapedOptions = {
-            ...options,
+            // ...options,
             src: `${SERVER_ROUTES.LOAD_SONG}${options.src}`,
             format: ['mp3'],
             usingWebAudio: true,
+            volume: 0.5,
+            autoplay: true,
         };
 
-        Player.instance = new Howl(mapedOptions);
-        this.src = options.src;
-        this.onload = options.onload;
-        this.onend = options.onend;
-    }
+        if (PlayerInstance && PlayerInstance.src !== options.src) {
+            PlayerInstance.unload();
 
-    static createInstance(options: PlayerInterface) {
-        console.log(PlayerInstance, options);
-
-        if (Player.instance && PlayerInstance.src !== options.src) {
-            Player.instance.unload();
-
-            PlayerInstance = new Player(options);
+            PlayerInstance = new Howl(mapedOptions);
         }
 
-        if (!Player.instance) {
-            PlayerInstance = new Player(options);
+        if (!PlayerInstance) {
+            PlayerInstance = new Howl(mapedOptions);
         }
 
-        return Player.instance;
+        return PlayerInstance;
     }
 
     static getInstance(): Howl | null {
-        return Player.instance;
+        return PlayerInstance;
     }
+}
 
-    static getContext() {
-        if (!Player.getInstance) {
+export class Analyser {
+    private static dataArray: Uint8Array | null = null;
+
+    static createAnalyser(PlayerInstance: Howl | null): void {
+        if (!PlayerInstance) {
             return;
         }
 
         const context: AudioContext = Howler.ctx;
         const audioSourceNode = Howler.masterGain ;
 
-        Player.analyser = context.createAnalyser();
-        Player.analyser.fftSize = 256;
+        AnalyserInstance = context.createAnalyser();
+        AnalyserInstance.fftSize = 256;
 
-        const bufferLength = Player.analyser.frequencyBinCount;
-        Player.dataArray = new Uint8Array(bufferLength);
+        const bufferLength = AnalyserInstance.frequencyBinCount;
+        this.dataArray = new Uint8Array(bufferLength);
 
-        audioSourceNode.connect(Player.analyser);
-        Player.analyser.connect(context.destination);
+        audioSourceNode.connect(AnalyserInstance);
+        // No needed, issues with sound!!!!
+        // AnalyserInstance.connect(context.destination);
     }
 
-    static getFrequency() {
-        Player.analyser.getByteFrequencyData(this.dataArray);
+    static getFrequency(): Uint8Array | null {
+        if (!AnalyserInstance) { return null; }
+
+        AnalyserInstance.getByteFrequencyData(this.dataArray);
 
         return this.dataArray;
     }
