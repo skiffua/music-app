@@ -18,8 +18,9 @@ export function draw(ctx, width, height): void {
 function createGradient(ctx, x0, y0, x1, y1) {
     const gradient = ctx.createLinearGradient(x0, y0, x1, y1);
 
-    gradient.addColorStop(0, 'green');
-    gradient.addColorStop(0.2, 'yellow');
+    gradient.addColorStop(0, '#038E16');
+    gradient.addColorStop(0.2, '#28B13B');
+    gradient.addColorStop(0.4, '#D3E331');
     gradient.addColorStop(0.6, 'orange');
     gradient.addColorStop(0.8, 'red');
     gradient.addColorStop(1, 'black');
@@ -31,17 +32,19 @@ export function rectangles(ctx, width, height, dataArray) {
     const freq = 128;
     const border = 1;
     const recWidth = ~~((width - (freq + 1) * border) / freq);
+    const halfCanvas = ~~(width / 2);
     const remainder = (width - freq * border) % freq;
-
-    console.log('rectangles', dataArray);
 
     if (ctx) {
         ctx.save();
         ctx.clearRect(0, 0, width, height);
         ctx.beginPath();
-        for (let i = 0; i <= freq; i++) {
-            const y = !dataArray[i] ? 0 : dataArray[i];
-            ctx.rect(i * recWidth + i * border,height - y, recWidth, height);
+        for (let i = 0; i < ~~(freq / 2); i++) {
+            const reqHeight = !dataArray[i] ? 0 : dataArray[i];
+            const y = reqHeight ? ~~((1 - reqHeight / 255) * height) : height;
+
+            ctx.rect(halfCanvas + border * (i + 1) + recWidth * i, y, recWidth, reqHeight);
+            ctx.rect(halfCanvas - border * i - recWidth * (i + 1), y, recWidth, reqHeight);
         }
         ctx.clip();
 

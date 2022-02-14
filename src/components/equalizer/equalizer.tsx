@@ -26,15 +26,10 @@ const Equalizer = (): any => {
     useEffect(() => {
         canvas.current.width = canvas.current.offsetWidth;
         canvas.current.height = canvas.current.offsetHeight;
-        console.log('canvas context', context);
-        // if (context) {
-        //     draw(context, canvas.current.width, canvas.current.height);
-        // }
     }, [context]);
 
     useEffect(() => {
-        console.log('dataArray', dataArray);
-        rectangles(context, canvas.current.width, canvas.current.height, dataArray)
+        window.requestAnimationFrame(() => rectangles(context, canvas.current.width, canvas.current.height, dataArray));
     }, [dataArray]);
 
     useEffect(() => {
@@ -49,7 +44,7 @@ const Equalizer = (): any => {
                     Analyser.createAnalyser(sound);
                     intervalId = setInterval(() => {
                         setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
-                    }, 50)
+                    }, 60)
                 });
 
                 sound.on('pause', () => {
