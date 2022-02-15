@@ -1,3 +1,5 @@
+const defaultPicsPosition = new Uint8Array(64).fill(150);
+
 export function draw(ctx, width, height): void {
     // const height: number = ctx.canvas.clientHeight;
     // const weight: number = ctx.canvas.clientWidth;
@@ -34,6 +36,7 @@ export function rectangles(ctx, width, height, dataArray) {
     const recWidth = ~~((width - (freq + 1) * border) / freq);
     const halfCanvas = ~~(width / 2);
     const remainder = (width - freq * border) % freq;
+    // defaultPicsPosition.fill(height);
 
     if (ctx) {
         ctx.save();
@@ -45,10 +48,24 @@ export function rectangles(ctx, width, height, dataArray) {
 
             ctx.rect(halfCanvas + border * (i + 1) + recWidth * i, y, recWidth, reqHeight);
             ctx.rect(halfCanvas - border * i - recWidth * (i + 1), y, recWidth, reqHeight);
+            // pics
+            if (defaultPicsPosition[i] > y) {
+                ctx.fillRect(halfCanvas + border * (i + 1) + recWidth * i, y - 10, recWidth, 2);
+                ctx.fillRect(halfCanvas - border * i - recWidth * (i + 1), y - 10, recWidth, 2);
+                defaultPicsPosition[i] = y - 30;
+            } else {
+                ctx.fillRect(halfCanvas + border * (i + 1) + recWidth * i, defaultPicsPosition[i], recWidth, 2);
+                ctx.fillRect(halfCanvas - border * i - recWidth * (i + 1), defaultPicsPosition[i], recWidth, 2);
+                defaultPicsPosition[i] = defaultPicsPosition[i] + 1;
+            }
         }
         ctx.clip();
 
         draw(ctx, width, height);
         ctx.restore();
     }
+}
+
+function pics() {
+    const defaultPicsPosition = new Uint8Array(64);
 }
