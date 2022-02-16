@@ -33,6 +33,8 @@ function createGradient(ctx, x0, y0, x1, y1) {
 export function rectangles(ctx, width, height, dataArray) {
     const freq = 128;
     const border = 1;
+    const picHeight = 2;
+    const picJump = 20;
     const recWidth = ~~((width - (freq + 1) * border) / freq);
     const halfCanvas = ~~(width / 2);
     const remainder = (width - freq * border) % freq;
@@ -44,18 +46,29 @@ export function rectangles(ctx, width, height, dataArray) {
         ctx.beginPath();
         for (let i = 0; i < ~~(freq / 2); i++) {
             const reqHeight = !dataArray[i] ? 0 : dataArray[i];
-            const y = reqHeight ? ~~((1 - reqHeight / 255) * height) : height;
+            const recY = reqHeight ? ~~((1 - reqHeight / 255) * height + picHeight) : height;
+            let picY;
 
-            ctx.rect(halfCanvas + border * (i + 1) + recWidth * i, y, recWidth, reqHeight);
-            ctx.rect(halfCanvas - border * i - recWidth * (i + 1), y, recWidth, reqHeight);
-            // pics
-            if (defaultPicsPosition[i] > y) {
-                ctx.fillRect(halfCanvas + border * (i + 1) + recWidth * i, y - 10, recWidth, 2);
-                ctx.fillRect(halfCanvas - border * i - recWidth * (i + 1), y - 10, recWidth, 2);
-                defaultPicsPosition[i] = y - 30;
+            if (recY - picHeight <= 0) {
+                picY = 0
+            } else if (recY === height) {
+                picY = 0
             } else {
-                ctx.fillRect(halfCanvas + border * (i + 1) + recWidth * i, defaultPicsPosition[i], recWidth, 2);
-                ctx.fillRect(halfCanvas - border * i - recWidth * (i + 1), defaultPicsPosition[i], recWidth, 2);
+                picY = recY - picJump;
+            }
+
+
+            ctx.rect(halfCanvas + border * (i + 1) + recWidth * i, recY, recWidth, reqHeight);
+            ctx.rect(halfCanvas - border * i - recWidth * (i + 1), recY, recWidth, reqHeight);
+            // pics
+            // ctx.fillStyle = 'blue';
+            if (defaultPicsPosition[i] > recY) {
+                ctx.fillRect(halfCanvas + border * (i + 1) + recWidth * i, recY - 10, recWidth, picHeight);
+                ctx.fillRect(halfCanvas - border * i - recWidth * (i + 1), recY - 10, recWidth, picHeight);
+                defaultPicsPosition[i] = picY;
+            } else {
+                ctx.fillRect(halfCanvas + border * (i + 1) + recWidth * i, defaultPicsPosition[i], recWidth, picHeight);
+                ctx.fillRect(halfCanvas - border * i - recWidth * (i + 1), defaultPicsPosition[i], recWidth, picHeight);
                 defaultPicsPosition[i] = defaultPicsPosition[i] + 1;
             }
         }

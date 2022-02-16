@@ -44,7 +44,7 @@ const Equalizer = (): any => {
                     Analyser.createAnalyser(sound);
                     intervalId = setInterval(() => {
                         setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
-                    }, 60)
+                    }, 50)
                 });
 
                 sound.on('pause', () => {
