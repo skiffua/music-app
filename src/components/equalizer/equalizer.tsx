@@ -9,12 +9,13 @@ import { eventBus } from "../../event-bus/event-bus";
 import {RefObject} from "react";
 import { Card } from "react-bootstrap";
 import './equlizer.scss';
-import { draw, rectangles } from "./helper";
+import { RectangleEqualizer } from "./helper";
 
 const Equalizer = (): any => {
     let sound: Howl | null = null;
     const [dataArray, setData] = useState(new Uint8Array(128));
     const [context, setContext] = useState(null);
+    const [RectEq, setRectEq] = useState(null);
     const styles = {
         border: '0.0625rem solid #9c9c9c',
         borderRadius: '0.25rem',
@@ -26,10 +27,14 @@ const Equalizer = (): any => {
     useEffect(() => {
         canvas.current.width = canvas.current.offsetWidth;
         canvas.current.height = canvas.current.offsetHeight;
+
+        if (context) { setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height)); }
     }, [context]);
 
     useEffect(() => {
-        window.requestAnimationFrame(() => rectangles(context, canvas.current.width, canvas.current.height, dataArray));
+        if (!context) { return; }
+
+        window.requestAnimationFrame(() => RectEq.rectangles(canvas.current.offsetWidth, canvas.current.offsetHeight, dataArray));
     }, [dataArray]);
 
     useEffect(() => {
@@ -42,6 +47,8 @@ const Equalizer = (): any => {
             if (sound) {
                 sound.on('play', () => {
                     Analyser.createAnalyser(sound);
+                    // setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height));
+
                     intervalId = setInterval(() => {
                         setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
                     }, 50)
