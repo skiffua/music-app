@@ -33,16 +33,20 @@ const Equalizer = (): any => {
 
     useEffect(() => {
         if (!context) { return; }
+        canvas.current.width = canvas.current.offsetWidth;
+        canvas.current.height = canvas.current.offsetHeight;
 
-        window.requestAnimationFrame(() => RectEq.rectangles(canvas.current.offsetWidth, canvas.current.offsetHeight, dataArray));
+        window.requestAnimationFrame(() => RectEq.rectangles(canvas.current.width, canvas.current.height, dataArray));
     }, [dataArray]);
 
     useEffect(() => {
+        console.log('mounted');
+
+        let intervalId;
         setContext(canvas.current.getContext('2d'));
 
         eventBus.on("onPlaySong", () => {
             sound = Player.getInstance();
-            let intervalId;
 
             if (sound) {
                 sound.on('play', () => {
@@ -66,6 +70,7 @@ const Equalizer = (): any => {
 
         return () => {
         eventBus.remove("onPlaySong");
+        clearInterval(intervalId);
         }
     }, []);
 

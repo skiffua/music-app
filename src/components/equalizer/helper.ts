@@ -1,11 +1,11 @@
 const defaultPicsPosition = new Uint8Array(64).fill(150);
 
 export class RectangleEqualizer {
-    private ctx: CanvasRenderingContext2D | null = null;
+    readonly ctx: CanvasRenderingContext2D | null = null;
     private width = NaN;
     private height = NaN;
     private freq = 128;
-    private border = 0;
+    private border = 1;
     private picHeight = 2;
     private picJump = 20;
     private largeSize = 900;
@@ -19,13 +19,18 @@ export class RectangleEqualizer {
         this.width = width;
         this.height = height;
 
-        if ( width > this.largeSize) {
-            this.border = 1;
-        }
+        // console.log(width, height);
+        // if ( width > this.largeSize) {
+        //     this.border = 1;
+        // } else {
+        //     this.border = 0;
+        // }
     }
 
     fillBackground(): void {
         const gradient = this.ctx.createLinearGradient(~~(this.width / 2), this.height, ~~(this.width / 2), 0);
+
+        // console.log(~~(this.width / 2), this.height, ~~(this.width / 2), 0);
 
         gradient.addColorStop(0, '#038E16');
         gradient.addColorStop(0.2, '#28B13B');
@@ -41,8 +46,8 @@ export class RectangleEqualizer {
     rectangles(width, height, dataArray) {
         this.updateDimensions(width, height);
 
-        const recWidth = ~~((this.width - (this.freq + 1) * this.border) / this.freq);
-        const halfCanvas = ~~(this.width / 2);
+        const recWidth = (this.width - (this.freq + 1) * this.border) / this.freq;
+        const halfCanvas = this.width / 2;
 
         if (this.ctx) {
             this.ctx.save();
