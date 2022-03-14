@@ -56,8 +56,8 @@ export class Analyser {
         // AnalyserInstance.connect(context.destination);
     }
 
-    static getFrequency(): Uint8Array | null {
-        if (!AnalyserInstance) { return null; }
+    static getFrequency(): Uint8Array | [] {
+        if (!AnalyserInstance) { return []; }
 
         AnalyserInstance.getByteFrequencyData(this.dataArray);
 

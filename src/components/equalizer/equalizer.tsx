@@ -1,18 +1,17 @@
 import * as React from "react";
-import canvasSketch from 'canvas-sketch';
 
 import { Howl } from 'howler';
 
-import { Analyser, Player, PlayerInstance } from "../playlist/player";
+import { Analyser, Player } from "../playlist/player";
 import { useEffect, useRef, useState } from "react";
 import { eventBus } from "../../event-bus/event-bus";
-import {RefObject} from "react";
 import { Card } from "react-bootstrap";
 import './equlizer.scss';
 import { RectangleEqualizer } from "./helper";
 
 const Equalizer = (): any => {
     let sound: Howl | null = null;
+    let intervalId: NodeJS.Timeout | null = null;
     const [dataArray, setData] = useState(new Uint8Array(128));
     const [context, setContext] = useState(null);
     const [RectEq, setRectEq] = useState(null);
@@ -24,15 +23,43 @@ const Equalizer = (): any => {
 
     const canvas = useRef(null);
 
-    useEffect(() => {
-        canvas.current.width = canvas.current.offsetWidth;
-        canvas.current.height = canvas.current.offsetHeight;
+    const drawEqualByInterval = () => {
+        intervalId = setInterval(() => {
+            // console.log('drawEqualByInterval', Analyser.getFrequency());
 
-        if (context) { setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height)); }
+            setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
+        }, 50)
+    };
+
+    const documentVisibilityHandling = () => {
+        if (document.visibilityState === 'hidden' && intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+        }
+
+        if (document.visibilityState === 'visible' && !intervalId && canvas) {
+            drawEqualByInterval();
+        }
+    };
+
+    useEffect(() => {
+        console.log('canvas upd', canvas);
+        if (canvas) {
+            canvas.current.width = canvas.current.offsetWidth;
+            canvas.current.height = canvas.current.offsetHeight;
+            setContext(canvas.current.getContext('2d')); }
+    }, [canvas]);
+
+    useEffect(() => {
+        console.log('context upd', context);
+        if (context) {
+            setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height));
+            drawEqualByInterval();
+        }
     }, [context]);
 
     useEffect(() => {
-        if (!context) { return; }
+        if (!context || !canvas || !RectEq) { return; }
         canvas.current.width = canvas.current.offsetWidth;
         canvas.current.height = canvas.current.offsetHeight;
 
@@ -40,22 +67,21 @@ const Equalizer = (): any => {
     }, [dataArray]);
 
     useEffect(() => {
-        console.log('mounted');
-
-        let intervalId;
+        console.log('mount');
         setContext(canvas.current.getContext('2d'));
+        document.addEventListener("visibilitychange", documentVisibilityHandling, false);
+
 
         eventBus.on("onPlaySong", () => {
+            console.log('onPlaySong', Player.getInstance());
+
             sound = Player.getInstance();
 
             if (sound) {
                 sound.on('play', () => {
                     Analyser.createAnalyser(sound);
                     // setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height));
-
-                    intervalId = setInterval(() => {
-                        setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
-                    }, 50)
+                    drawEqualByInterval();
                 });
 
                 sound.on('pause', () => {
@@ -69,6 +95,10 @@ const Equalizer = (): any => {
         });
 
         return () => {
+        console.log('unmount');
+
+        document.removeEventListener('visibilitychange', documentVisibilityHandling);
+
         eventBus.remove("onPlaySong");
         clearInterval(intervalId);
         }
