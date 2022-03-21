@@ -6,7 +6,7 @@ import { ListGroup } from "react-bootstrap";
 import { Howl } from 'howler';
 import {Analyser, Player, PlayerInstance} from "./player";
 
-import { setActiveSong } from "../../store/actions/songsActions";
+import { setActiveSong, setActiveSoundId } from "../../store/actions/songsActions";
 import { useEffect } from "react";
 import {eventBus} from "../../event-bus/event-bus";
 
@@ -43,7 +43,7 @@ const Playlist = (props): any => {
         if (sound.playing()) {
             sound.seek(0);
         } else {
-            sound.play();
+            props.setActiveSoundIdToState(sound.play());
             // Player.createAnalyser();
             // setInterval(() => Player.getFrequency(), 1000)
         }
@@ -100,5 +100,6 @@ export default connect(
     mapStateToProps,
     {
         setActiveSongToState: setActiveSong,
+        setActiveSoundIdToState: setActiveSoundId,
     }
 )(Playlist);

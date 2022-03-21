@@ -1,13 +1,15 @@
-import { SET_SONGS_LIST, SET_CURRENT_SONG } from "../actions/types";
+import { SET_SONGS_LIST, SET_CURRENT_SONG, SET_CURRENT_SOUND_ID } from "../actions/types";
 
 interface SongsStore {
     songList: any[],
     songPlaying: any,
+    activeSoundId: number,
 }
 
 const songsStoreInitial: SongsStore = {
     songList: [],
     songPlaying: null,
+    activeSoundId: NaN,
 };
 
 const songsReducer = (state = songsStoreInitial, action) => {
@@ -24,6 +26,13 @@ const songsReducer = (state = songsStoreInitial, action) => {
             return {
                 ...state,
                 songPlaying: currentSong,
+            };
+        }
+        case SET_CURRENT_SOUND_ID: {
+            const currentSoundId = action.payload;
+            return {
+                ...state,
+                activeSoundId: currentSoundId,
             };
         }
         default: return state;

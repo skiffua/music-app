@@ -1,6 +1,6 @@
 import * as React from "react";
-
 import { Howl } from 'howler';
+import { connect } from 'react-redux';
 
 import { Analyser, Player } from "../playlist/player";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +9,7 @@ import { Card } from "react-bootstrap";
 import './equlizer.scss';
 import { RectangleEqualizer } from "./helper";
 
-const Equalizer = (): any => {
+const Equalizer = (props): any => {
     let sound: Howl | null = null;
     let intervalId: NodeJS.Timeout | null = null;
     const [dataArray, setData] = useState(new Uint8Array(128));
@@ -20,30 +20,37 @@ const Equalizer = (): any => {
         borderRadius: '0.25rem',
         fillStyle: 'orange',
     };
+    // const activePointRef = React.useRef(props.songsDataProp.activeSoundId);
 
     const canvas = useRef(null);
 
     const drawEqualByInterval = () => {
+        // console.log('drawEqualByInterval setData 1', intervalId);
         intervalId = setInterval(() => {
-            // console.log('drawEqualByInterval', Analyser.getFrequency());
-
             setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
         }, 50)
     };
 
     const documentVisibilityHandling = () => {
+        console.log('soundId', props.songsDataProp.activeSoundId);
+
         if (document.visibilityState === 'hidden' && intervalId) {
             clearInterval(intervalId);
             intervalId = null;
         }
 
-        if (document.visibilityState === 'visible' && !intervalId && canvas) {
+        if (document.visibilityState === 'visible' && intervalId && canvas) {
+
             drawEqualByInterval();
         }
     };
 
+    // useEffect(() => {
+    //     console.log('soundId prop', props.songsDataProp.activeSoundId);
+    // }, [props.songsDataProp.activeSoundId]);
+
     useEffect(() => {
-        console.log('canvas upd', canvas);
+        // console.log('canvas upd', canvas);
         if (canvas) {
             canvas.current.width = canvas.current.offsetWidth;
             canvas.current.height = canvas.current.offsetHeight;
@@ -51,10 +58,10 @@ const Equalizer = (): any => {
     }, [canvas]);
 
     useEffect(() => {
-        console.log('context upd', context);
+        // console.log('context upd', context);
         if (context) {
             setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height));
-            drawEqualByInterval();
+            // drawEqualByInterval();
         }
     }, [context]);
 
@@ -110,11 +117,17 @@ const Equalizer = (): any => {
          >
              <Card.Body
                  className="p-2"
-             >
+             >{props.songsDataProp.activeSoundId}
                  <canvas ref={canvas} className="canvas"/>
              </Card.Body>
          </Card>
         );
 };
 
-export default Equalizer
+const mapStateToProps = state => ({
+    songsDataProp: state.songsData,
+});
+
+export default connect(
+    mapStateToProps,
+)(Equalizer);

@@ -50,8 +50,8 @@ export class RectangleEqualizer {
         const halfCanvas = this.width / 2;
 
         if (this.ctx) {
-            this.ctx.save();
-            this.ctx.clearRect(0, 0, this.width, this.height);
+            // this.ctx.save();
+            // this.ctx.clearRect(0, 0, this.width, this.height);
             this.ctx.beginPath();
             for (let i = 0; i < ~~(this.freq / 2); i++) {
                 const reqHeight = !dataArray[i] ? 0 : dataArray[i];
@@ -82,9 +82,10 @@ export class RectangleEqualizer {
                 }
             }
             this.ctx.clip();
+            this.ctx.fillRect(0, 0, 100, 200);
 
             this.fillBackground();
-            this.ctx.restore();
+            // this.ctx.restore();
         }
     }
 }

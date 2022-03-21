@@ -12,8 +12,8 @@ export class Player {
             src: `${SERVER_ROUTES.LOAD_SONG}${options.src}`,
             format: ['mp3'],
             usingWebAudio: true,
-            volume: 0.5,
-            autoplay: true,
+            volume: 0.1,
+            autoplay: false,
         };
 
         if (PlayerInstance && PlayerInstance.src !== options.src) {
