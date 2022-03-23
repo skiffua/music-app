@@ -13,12 +13,14 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: path.join(__dirname, outputDirectory),
-        filename: 'bundle.js'
+        filename: '[name].js',
+        sourceMapFilename: "[name].js.map"
     },
     target: 'web',
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
+        fallback: { crypto: false },
     },
 
     module: {
@@ -66,8 +68,8 @@ module.exports = {
         host: '0.0.0.0',
         port: 3000,
         historyApiFallback: true,
-        compress: true,
-        disableHostCheck: true
+        // compress: true,
+        // disableHostCheck: true
     },
     devtool: false,
     plugins: [
@@ -76,10 +78,10 @@ module.exports = {
             favicon: './public/favicon.ico'
         }),
         new webpack.SourceMapDevToolPlugin({
-            filename: 'sourcemaps/source.js.map',
+            filename: 'sourcemaps/[file].map',
         }),
         new Dotenv({
             path: `./.env.${env === "production" ? "prod" : "dev"}`,
         })
-    ]
+    ],
 };

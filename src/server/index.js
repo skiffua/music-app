@@ -38,7 +38,12 @@ const server = app.listen(process.env.PORT || 8080, () => {
     console.log('server worked!');
 });
 
-const io = socketIO(server);
+const io = socketIO(server, {
+    cors: {
+        origin: "*",
+        credentials: true
+    }
+});
 // io.listen(process.env.SOCKET_PORT || 6969);
 
 io.on('connection', (client) => {

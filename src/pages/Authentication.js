@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import {useMatch} from "react-router-dom";
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
@@ -25,6 +26,7 @@ const Authentication = props => {
     const [{isLoading, response, error}, doFetch] = useFetch();
     const [fetchResult, setResult] = useState(null);
     const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
+    const matchLogin = useMatch('/login');
 
     const register = () => {
         if (!error) {
@@ -86,7 +88,7 @@ const Authentication = props => {
     };
 
     useEffect(() => {
-        setPath(props.match.path === '/login')
+        setPath(!!matchLogin)
     });
 
     useEffect(() => {
