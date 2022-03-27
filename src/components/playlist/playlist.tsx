@@ -14,7 +14,7 @@ const Playlist = (props): any => {
     interface playlistTrack {
         id: number;
         author: string;
-        trackName: string;
+        track_name: string;
         duration: number;
         position?: number;
     }
@@ -84,7 +84,7 @@ const Playlist = (props): any => {
                          key={index}
                          onClick={() => getAudioTrack(audioTrack.id)}
                      >
-                         { index + 1 }. { audioTrack.author } - { audioTrack.trackName } : { audioTrack.duration }
+                         { index + 1 }. { audioTrack.author } - { audioTrack.track_name } : { audioTrack.duration }
                      </ListGroup.Item>
                  );
              })}

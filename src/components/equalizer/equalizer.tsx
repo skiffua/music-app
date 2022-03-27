@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Howl } from 'howler';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 import { Analyser, Player } from "../playlist/player";
 import { useEffect, useRef, useState } from "react";
@@ -15,6 +15,9 @@ const Equalizer = (props): any => {
     const [dataArray, setData] = useState(new Uint8Array(128));
     const [context, setContext] = useState(null);
     const [RectEq, setRectEq] = useState(null);
+    const soundId = useSelector((state: { songsData: any}) => state.songsData.activeSoundId);
+    const ref = useRef(NaN);
+
     const styles = {
         border: '0.0625rem solid #9c9c9c',
         borderRadius: '0.25rem',
@@ -31,23 +34,23 @@ const Equalizer = (props): any => {
         }, 50)
     };
 
-    const documentVisibilityHandling = () => {
-        console.log('soundId', props.songsDataProp.activeSoundId);
+    const isSoundPlaying = (): boolean => !!sound && sound.playing();
 
+    const documentVisibilityHandling = () => {
         if (document.visibilityState === 'hidden' && intervalId) {
             clearInterval(intervalId);
             intervalId = null;
         }
 
-        if (document.visibilityState === 'visible' && intervalId && canvas) {
+        if (document.visibilityState === 'visible' && isSoundPlaying) {
 
             drawEqualByInterval();
         }
     };
 
-    // useEffect(() => {
-    //     console.log('soundId prop', props.songsDataProp.activeSoundId);
-    // }, [props.songsDataProp.activeSoundId]);
+    useEffect(() => {
+        ref.current = props.songsDataProp.activeSoundId;
+    }, [props.songsDataProp.activeSoundId]);
 
     useEffect(() => {
         // console.log('canvas upd', canvas);
@@ -59,7 +62,7 @@ const Equalizer = (props): any => {
 
     useEffect(() => {
         // console.log('context upd', context);
-        if (context) {
+        if (context && canvas) {
             setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height));
             // drawEqualByInterval();
         }
@@ -76,6 +79,11 @@ const Equalizer = (props): any => {
     useEffect(() => {
         console.log('mount');
         setContext(canvas.current.getContext('2d'));
+
+        if (isSoundPlaying && !intervalId) {
+            drawEqualByInterval();
+        }
+
         document.addEventListener("visibilitychange", documentVisibilityHandling, false);
 
 
@@ -117,7 +125,7 @@ const Equalizer = (props): any => {
          >
              <Card.Body
                  className="p-2"
-             >{props.songsDataProp.activeSoundId}
+             >
                  <canvas ref={canvas} className="canvas"/>
              </Card.Body>
          </Card>

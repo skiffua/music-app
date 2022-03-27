@@ -10,7 +10,7 @@ export const getSongsList = async (req, res) => {
   try {
       connector = await dbConnection();
       const songList = await connector.query(
-              `SELECT id, author, trackName, date, positive, negative FROM ${SONGS.NAME}`
+              `SELECT id, author, track_name, track_date, positive, negative FROM ${SONGS.NAME}`
           );
           res.status(200).send({
               message: 'songs get succesfully',
@@ -34,11 +34,11 @@ export const getSong = async (req, res) => {
     try {
         connector = await dbConnection();
         const fileName = await connector.query(
-            `SELECT DISTINCT fileName FROM songs 
+            `SELECT DISTINCT file_name FROM songs 
             WHERE id=${id}`
         );
 
-        const audioFilePath = path.resolve(__dirname, `../media/top/${fileName[0].fileName}.mp3`);
+        const audioFilePath = path.resolve(__dirname, `../media/top/${fileName[0].file_name}.mp3`);
         fs.access(audioFilePath, (err) => {
             if (err) {
                 res.status(404).send({
@@ -46,7 +46,7 @@ export const getSong = async (req, res) => {
                 });
 
             } else {
-                res.status(200).sendFile(path.resolve(__dirname, `../media/top/${fileName[0].fileName}.mp3`));
+                res.status(200).sendFile(path.resolve(__dirname, `../media/top/${fileName[0].file_name}.mp3`));
             }
         })
 

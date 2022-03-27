@@ -12,7 +12,7 @@ const Header = () => {
             <Container>
                 <Navbar.Brand href="/">Гарбуз</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
+                <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
                     <Nav className="ml-auto">
                         <Nav.Link as={Link} to="/">Домівка</Nav.Link>
                         <Nav.Link as={Link} to="chart">Чарт</Nav.Link>
