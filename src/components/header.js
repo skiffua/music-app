@@ -1,12 +1,28 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Link } from 'react-router-dom'
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {Container} from "react-bootstrap";
+import {connect} from "react-redux";
+import {getSongsList} from "../store/actions/songsActions";
+import useFetch from "../hooks/useFetch";
+import {SERVER_ROUTES} from "../constants/api";
 
 // import './header.scss';
 
-const Header = () => {
+const Header = (props) => {
+    const [{ response }, doFetch] = useFetch();
+
+    useEffect(() => {
+            doFetch(SERVER_ROUTES.SONGS, { method: 'get'});
+        },
+        []);
+
+    useEffect(() => {
+            if (response) { props.getSongsListToProp(response.data);}
+        },
+        [response]);
+
     return (
         <Navbar bg="dark" variant="dark" expand="sm">
             <Container>
@@ -27,4 +43,9 @@ const Header = () => {
     )
 };
 
-export default Header
+export default connect(
+    undefined,
+    {
+        getSongsListToProp: getSongsList,
+    }
+)(Header)

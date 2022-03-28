@@ -23,26 +23,41 @@ const Equalizer = (props): any => {
         borderRadius: '0.25rem',
         fillStyle: 'orange',
     };
-    // const activePointRef = React.useRef(props.songsDataProp.activeSoundId);
 
     const canvas = useRef(null);
 
     const drawEqualByInterval = () => {
-        // console.log('drawEqualByInterval setData 1', intervalId);
-        intervalId = setInterval(() => {
-            setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
-        }, 50)
+        if (!intervalId) {
+            intervalId = setInterval(() => {
+                console.log('setInterval');
+
+                setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
+            }, 100)
+
+            console.log('intervalId', intervalId);
+        }
     };
 
-    const isSoundPlaying = (): boolean => !!sound && sound.playing();
+    const isSoundPlaying = (): boolean => {
+      return !!sound && sound.playing();
+    };
+
+    const clearFreqUpdate = (): void => {
+        clearInterval(intervalId);
+        intervalId = null;
+    };
 
     const documentVisibilityHandling = () => {
+        console.log('documentVisibilityHandling',
+            document.visibilityState === 'hidden' && intervalId,
+            document.visibilityState === 'visible' && isSoundPlaying(),
+            );
+
         if (document.visibilityState === 'hidden' && intervalId) {
-            clearInterval(intervalId);
-            intervalId = null;
+            clearFreqUpdate();
         }
 
-        if (document.visibilityState === 'visible' && isSoundPlaying) {
+        if (document.visibilityState === 'visible' && isSoundPlaying()) {
 
             drawEqualByInterval();
         }
@@ -53,34 +68,37 @@ const Equalizer = (props): any => {
     }, [props.songsDataProp.activeSoundId]);
 
     useEffect(() => {
-        // console.log('canvas upd', canvas);
         if (canvas) {
             canvas.current.width = canvas.current.offsetWidth;
             canvas.current.height = canvas.current.offsetHeight;
-            setContext(canvas.current.getContext('2d')); }
+            setContext(canvas.current.getContext('2d'));
+        }
     }, [canvas]);
 
     useEffect(() => {
-        // console.log('context upd', context);
-        if (context && canvas) {
+        if (context && canvas && canvas.current) {
             setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height));
-            // drawEqualByInterval();
         }
     }, [context]);
 
     useEffect(() => {
-        if (!context || !canvas || !RectEq) { return; }
+        if (!context || !RectEq) { return; }
         canvas.current.width = canvas.current.offsetWidth;
         canvas.current.height = canvas.current.offsetHeight;
 
-        window.requestAnimationFrame(() => RectEq.rectangles(canvas.current.width, canvas.current.height, dataArray));
+        window.requestAnimationFrame(() => {
+            if (canvas && canvas.current) {
+                RectEq.rectangles(canvas.current.width, canvas.current.height, dataArray)
+            }
+        });
     }, [dataArray]);
 
     useEffect(() => {
-        console.log('mount');
+        // console.log('mount', isSoundPlaying && !intervalId);
+        sound = Player.getInstance();
         setContext(canvas.current.getContext('2d'));
 
-        if (isSoundPlaying && !intervalId) {
+        if (isSoundPlaying() && !intervalId) {
             drawEqualByInterval();
         }
 
@@ -95,7 +113,6 @@ const Equalizer = (props): any => {
             if (sound) {
                 sound.on('play', () => {
                     Analyser.createAnalyser(sound);
-                    // setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height));
                     drawEqualByInterval();
                 });
 
@@ -110,12 +127,10 @@ const Equalizer = (props): any => {
         });
 
         return () => {
-        console.log('unmount');
+            clearFreqUpdate();
 
-        document.removeEventListener('visibilitychange', documentVisibilityHandling);
-
-        eventBus.remove("onPlaySong");
-        clearInterval(intervalId);
+            document.removeEventListener('visibilitychange', documentVisibilityHandling);
+            eventBus.remove("onPlaySong");
         }
     }, []);
 
