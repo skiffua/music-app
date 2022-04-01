@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Howl } from 'howler';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 
 import { Analyser, Player } from "../playlist/player";
 import { useEffect, useRef, useState } from "react";
@@ -11,12 +11,11 @@ import { RectangleEqualizer } from "./helper";
 
 const Equalizer = (props): any => {
     let sound: Howl | null = null;
-    let intervalId: NodeJS.Timeout | null = null;
     const [dataArray, setData] = useState(new Uint8Array(128));
     const [context, setContext] = useState(null);
     const [RectEq, setRectEq] = useState(null);
-    const soundId = useSelector((state: { songsData: any}) => state.songsData.activeSoundId);
     const ref = useRef(NaN);
+    const intervalRef = useRef(null);
 
     const styles = {
         border: '0.0625rem solid #9c9c9c',
@@ -27,38 +26,29 @@ const Equalizer = (props): any => {
     const canvas = useRef(null);
 
     const drawEqualByInterval = () => {
-        if (!intervalId) {
-            intervalId = setInterval(() => {
-                console.log('setInterval');
+        const intervalId = setInterval(() => {
+            console.log('setInterval', intervalId);
 
-                setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
-            }, 100)
-
-            console.log('intervalId', intervalId);
-        }
+            setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
+        }, 100);
+        intervalRef.current = intervalId;
     };
 
-    const isSoundPlaying = (): boolean => {
-      return !!sound && sound.playing();
+    const isEqualizerCanStart = (): boolean => {
+        return document.visibilityState === 'visible' && !intervalRef.current && !!sound && sound.playing();
     };
 
     const clearFreqUpdate = (): void => {
-        clearInterval(intervalId);
-        intervalId = null;
+        clearInterval(intervalRef.current);
+        intervalRef.current  = null;
     };
 
     const documentVisibilityHandling = () => {
-        console.log('documentVisibilityHandling',
-            document.visibilityState === 'hidden' && intervalId,
-            document.visibilityState === 'visible' && isSoundPlaying(),
-            );
-
-        if (document.visibilityState === 'hidden' && intervalId) {
+        if (document.visibilityState === 'hidden' && intervalRef.current) {
             clearFreqUpdate();
         }
 
-        if (document.visibilityState === 'visible' && isSoundPlaying()) {
-
+        if (isEqualizerCanStart()) {
             drawEqualByInterval();
         }
     };
@@ -94,16 +84,14 @@ const Equalizer = (props): any => {
     }, [dataArray]);
 
     useEffect(() => {
-        // console.log('mount', isSoundPlaying && !intervalId);
         sound = Player.getInstance();
         setContext(canvas.current.getContext('2d'));
 
-        if (isSoundPlaying() && !intervalId) {
+        if (isEqualizerCanStart()) {
             drawEqualByInterval();
         }
 
         document.addEventListener("visibilitychange", documentVisibilityHandling, false);
-
 
         eventBus.on("onPlaySong", () => {
             console.log('onPlaySong', Player.getInstance());
@@ -113,15 +101,18 @@ const Equalizer = (props): any => {
             if (sound) {
                 sound.on('play', () => {
                     Analyser.createAnalyser(sound);
-                    drawEqualByInterval();
+
+                    if (isEqualizerCanStart()) {
+                        drawEqualByInterval();
+                    }
                 });
 
                 sound.on('pause', () => {
-                    clearInterval(intervalId);
+                    clearInterval(intervalRef.current);
                 });
 
                 sound.on('stop', () => {
-                    clearInterval(intervalId);
+                    clearInterval(intervalRef.current);
                 });
             }
         });
