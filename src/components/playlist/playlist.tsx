@@ -29,6 +29,8 @@ const Playlist = (props): any => {
     // }, [PlayerInstance]);
 
     const getAudioTrack = (audioTrackId: number) => {
+        console.log("getAudioTrack");
+
         const sound: Howl = Player.createInstance({
             src: `${audioTrackId}`,
             // onend: () => {
@@ -48,6 +50,7 @@ const Playlist = (props): any => {
             // setInterval(() => Player.getFrequency(), 1000)
         }
 
+        console.log("eventBus.dispatch");
         eventBus.dispatch("onPlaySong");
 
     //     const sound = new Howl({

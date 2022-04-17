@@ -14,7 +14,7 @@ const Equalizer = (props): any => {
     const [dataArray, setData] = useState(new Uint8Array(128));
     const [context, setContext] = useState(null);
     const [RectEq, setRectEq] = useState(null);
-    const ref = useRef(NaN);
+    const ref = useRef({ current: null });
     const intervalRef = useRef(null);
 
     const styles = {
@@ -27,14 +27,21 @@ const Equalizer = (props): any => {
 
     const drawEqualByInterval = () => {
         const intervalId = setInterval(() => {
-            console.log('setInterval', intervalId);
+            console.log('setInterval1', intervalId);
 
             setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
         }, 100);
         intervalRef.current = intervalId;
+        // console.log('setInterval2', intervalId, intervalRef.current);
     };
 
+    useEffect(() => {
+        console.log('intervalRef.current', intervalRef.current);
+    }, [intervalRef.current]);
+
     const isEqualizerCanStart = (): boolean => {
+        console.log('intervalRef.current', intervalRef.current);
+
         return document.visibilityState === 'visible' && !intervalRef.current && !!sound && sound.playing();
     };
 
@@ -53,8 +60,46 @@ const Equalizer = (props): any => {
         }
     };
 
+    const onPlaySongHandler = (e) => {
+        console.log('onPlaySong', e);
+
+        clearFreqUpdate();
+
+        sound = Player.getInstance();
+
+        if (sound) {
+            sound.on('play', () => {
+                console.log('play');
+
+                Analyser.createAnalyser(sound);
+
+                if (isEqualizerCanStart()) {
+                    drawEqualByInterval();
+                }
+            });
+
+            sound.on('pause', () => {
+                clearFreqUpdate();
+            });
+
+            sound.on('stop', () => {
+                console.log('stop');
+
+                clearFreqUpdate();
+            });
+
+            sound.on('end', () => {
+                console.log('end');
+
+                clearFreqUpdate();
+            });
+        }
+    };
+
     useEffect(() => {
         ref.current = props.songsDataProp.activeSoundId;
+
+        clearFreqUpdate();
     }, [props.songsDataProp.activeSoundId]);
 
     useEffect(() => {
@@ -93,42 +138,21 @@ const Equalizer = (props): any => {
 
         document.addEventListener("visibilitychange", documentVisibilityHandling, false);
 
-        eventBus.on("onPlaySong", () => {
-            console.log('onPlaySong', Player.getInstance());
-
-            sound = Player.getInstance();
-
-            if (sound) {
-                sound.on('play', () => {
-                    Analyser.createAnalyser(sound);
-
-                    if (isEqualizerCanStart()) {
-                        drawEqualByInterval();
-                    }
-                });
-
-                sound.on('pause', () => {
-                    clearInterval(intervalRef.current);
-                });
-
-                sound.on('stop', () => {
-                    clearInterval(intervalRef.current);
-                });
-            }
-        });
+        eventBus.on("onPlaySong", onPlaySongHandler);
 
         return () => {
             clearFreqUpdate();
 
             document.removeEventListener('visibilitychange', documentVisibilityHandling);
-            eventBus.remove("onPlaySong");
+            eventBus.remove('onPlaySong', onPlaySongHandler);
+            // console.log(document)
         }
     }, []);
 
      return (
          <Card
              className="audio-player p-0"
-         >
+         >intervalRef.current {intervalRef.current}
              <Card.Body
                  className="p-2"
              >

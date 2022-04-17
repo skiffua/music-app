@@ -82,7 +82,7 @@ export class RectangleEqualizer {
                 }
             }
             this.ctx.clip();
-            this.ctx.fillRect(0, 0, 100, 200);
+            // this.ctx.fillRect(0, 0, 100, 200);
 
             this.fillBackground();
             // this.ctx.restore();
