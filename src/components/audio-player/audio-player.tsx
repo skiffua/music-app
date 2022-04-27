@@ -11,7 +11,7 @@ const AudioPlayer = (): any => {
 
      return (
          <Card
-             className="audio-player p-0 flex-grow-1"
+             className="audio-player p-0 flex-grow-1 border-0"
          >
              <Card.Body
                  className="flex-grow-1 p-2"

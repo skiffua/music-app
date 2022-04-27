@@ -1,0 +1,4 @@
+export const DIMENSIONS = {
+  EQUALIZER_HEIGHT: 150,
+  EQUALIZER_FREG: 128,
+};

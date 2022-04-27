@@ -18,31 +18,6 @@ $player-button-size: 40px;
 
 }
 
-.audio-player {
-    .controls-inner {
-        .controls-btn {
-            width: $player-button-size;
-            height: $player-button-size;
-            background-repeat: no-repeat;
-            background-size: contain;
-            border-radius: 15px;
-            cursor: pointer;
-        }
-
-        .play-btn {
-            @include backgroundButton('../../assets/icons/play.svg');
-        }
-        .pause-btn {
-            @include backgroundButton('../../assets/icons/pause.svg');
-        }
-        .stop-btn {
-            @include backgroundButton('../../assets/icons/stop.svg');
-        }
-        .prev-btn {
-            @include backgroundButton('../../assets/icons/prev.svg');
-        }
-        .next-btn {
-            @include backgroundButton('../../assets/icons/next.svg');
-        }
-    }
+.list-group {
+    height: calc(100% - #{$player-block-controls-height});
 }

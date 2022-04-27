@@ -14,6 +14,8 @@ const Equalizer = (props): any => {
     const [dataArray, setData] = useState(new Uint8Array(128));
     const [context, setContext] = useState(null);
     const [RectEq, setRectEq] = useState(null);
+    const [onResizeInterval, setOnResizeInterval] = useState(false);
+
     const ref = useRef({ current: null });
     const intervalRef = useRef(null);
 
@@ -23,25 +25,51 @@ const Equalizer = (props): any => {
         fillStyle: 'orange',
     };
 
+    const isContext = (): boolean => {
+        return context && RectEq;
+    };
+
     const canvas = useRef(null);
+
+    const handleResizeCanvasChange = (): void => {
+        if (isContext()) {
+            let imageData = context.getImageData(0 , 0, canvas.current.width, canvas.current.height);
+
+            canvas.current.width = canvas.current.offsetWidth;
+            canvas.current.height = canvas.current.offsetHeight;
+            RectEq.updateDimensions(canvas.current.offsetWidth, canvas.current.offsetHeight);
+
+            context.putImageData(imageData, 0, 0);
+        }
+    };
+
+    // useEffect(() => {
+    //     console.log('onResizeInterval', onResizeInterval);
+    //
+    //     if (!onResizeInterval) {
+    //         setTimeout(() => {
+    //             setOnResizeInterval(true);
+    //             onResizeWindow();
+    //             console.log('resize');
+    //         }, 5000);
+    //     }
+    // }, [onResizeInterval]);
+
+
+    const onResizeWindow = () => {
+        console.log('onResizeWindow');
+
+        setOnResizeInterval(true);
+    };
 
     const drawEqualByInterval = () => {
         const intervalId = setInterval(() => {
-            console.log('setInterval1', intervalId);
-
             setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
-        }, 100);
+        }, 500);
         intervalRef.current = intervalId;
-        // console.log('setInterval2', intervalId, intervalRef.current);
     };
 
-    useEffect(() => {
-        console.log('intervalRef.current', intervalRef.current);
-    }, [intervalRef.current]);
-
     const isEqualizerCanStart = (): boolean => {
-        console.log('intervalRef.current', intervalRef.current);
-
         return document.visibilityState === 'visible' && !intervalRef.current && !!sound && sound.playing();
     };
 
@@ -111,15 +139,39 @@ const Equalizer = (props): any => {
     }, [canvas]);
 
     useEffect(() => {
+        console.log('onResizeInterval', onResizeInterval);
+
+        if (onResizeInterval) {
+            handleResizeCanvasChange();
+
+            setTimeout(() => {
+                handleResizeCanvasChange();
+                setOnResizeInterval(false);
+            }, 5000);
+        } else {
+            // setTimeout(() => {
+            //     setOnResizeInterval(true);
+            //     console.log('resize set true');
+            // }, 5000);
+        }
+    }, [onResizeInterval]);
+
+    useEffect(() => {
+        console.log('context', context, onResizeInterval);
+
         if (context && canvas && canvas.current) {
             setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height));
         }
     }, [context]);
 
     useEffect(() => {
-        if (!context || !RectEq) { return; }
-        canvas.current.width = canvas.current.offsetWidth;
-        canvas.current.height = canvas.current.offsetHeight;
+        if (!isContext()) { return; }
+        // canvas.current.width = canvas.current.offsetWidth;
+        // canvas.current.height = canvas.current.offsetHeight;
+
+        // setInterval(() => {
+        //     context.fillRect(Math.floor(Math.random() * 100), Math.floor(Math.random() * 150), Math.floor(Math.random() * 1000), Math.floor(Math.random() * 150));
+        // }, 1000);
 
         window.requestAnimationFrame(() => {
             if (canvas && canvas.current) {
@@ -130,13 +182,15 @@ const Equalizer = (props): any => {
 
     useEffect(() => {
         sound = Player.getInstance();
-        setContext(canvas.current.getContext('2d'));
+        // setContext(canvas.current.getContext('2d'));
 
         if (isEqualizerCanStart()) {
             drawEqualByInterval();
         }
 
         document.addEventListener("visibilitychange", documentVisibilityHandling, false);
+        window.addEventListener("resize", onResizeWindow, false);
+
 
         eventBus.on("onPlaySong", onPlaySongHandler);
 
@@ -151,12 +205,12 @@ const Equalizer = (props): any => {
 
      return (
          <Card
-             className="audio-player p-0"
-         >intervalRef.current {intervalRef.current}
+             className="p-0 border-0"
+         >
              <Card.Body
                  className="p-2"
              >
-                 <canvas ref={canvas} className="canvas"/>
+                 <canvas ref={canvas} className="canvas" style={styles}/>
              </Card.Body>
          </Card>
         );

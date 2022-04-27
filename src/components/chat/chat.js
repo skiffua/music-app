@@ -72,12 +72,12 @@ const Chat = () => {
      return (
             <Container
                 fluid
-                className="d-flex flex-grow-1 flex-column justify-content-between chat p-0"
+                className="d-flex flex-grow-1 flex-column chat p-0"
             >
-                <Row className="flex-column">
+                <Col className="flex-column flex-nowrap chat-playlist">
                     <Playlist />
                     <AudioPlayer />
-                </Row>
+                </Col>
                 <Row className="m-0 chat-container flex-column flex-grow-1">
                     <Col
                         className="chat-items flex-grow-1"

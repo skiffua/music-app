@@ -19,6 +19,9 @@ $player-button-size: 40px;
 }
 
 .audio-player {
+    height: $player-block-controls-height;
+    max-height: $player-block-controls-height;
+
     .controls-inner {
         .controls-btn {
             width: $player-button-size;

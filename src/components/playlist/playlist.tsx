@@ -1,4 +1,4 @@
-// import './playlist.scss';
+import './playlist.scss';
 import * as React from "react";
 import { connect } from 'react-redux';
 import { ListGroup } from "react-bootstrap";
@@ -78,7 +78,7 @@ const Playlist = (props): any => {
     };
 
      return (
-         <ListGroup>
+         <ListGroup className="overflow-auto flex-grow-0 list-group">
              {props.songsDataProp.songList && props.songsDataProp.songList
                  .map((audioTrack: playlistTrack, index: number) => {
                  return (
