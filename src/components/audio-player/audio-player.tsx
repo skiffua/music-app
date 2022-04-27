@@ -11,15 +11,15 @@ const AudioPlayer = (): any => {
 
      return (
          <Card
-             className="audio-player p-0 flex-grow-1 border-0"
+             className="controls p-0 flex-grow-1 border-0"
          >
              <Card.Body
-                 className="flex-grow-1 p-2"
+                 className="flex-grow-1 p-0"
              >
-                 <div className="title d-flex justify-content-between p-1 pr-4 pl-4">
-                     <div className="track">Track</div>
-                     <div className="timer">Time</div>
-                     <div className="duration">Duration</div>
+                 <div className="controls-text controls-text-title d-flex justify-content-between p-1">
+                     <div className="controls-text controls-text-track">Track</div>
+                     <div className="controls-text controls-text-timer">Time</div>
+                     <div className="controls-text controls-text-duration">Duration</div>
                  </div>
                  <div className="controls-outer">
                      <div className="controls-inner d-flex justify-content-around">

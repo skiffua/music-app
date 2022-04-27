@@ -1,6 +1,6 @@
 @import '../../styles/_variables.scss';
 
-$player-button-size: 40px;
+$player-button-size: 20px;
 
 @mixin hoverButton($image) {
     background-image: url($image), radial-gradient(circle, white 10%, $main-brown-lighten 80%);
@@ -18,9 +18,13 @@ $player-button-size: 40px;
 
 }
 
-.audio-player {
+.controls {
     height: $player-block-controls-height;
     max-height: $player-block-controls-height;
+
+  .controls-text {
+    font-size: 13px;
+  }
 
     .controls-inner {
         .controls-btn {
