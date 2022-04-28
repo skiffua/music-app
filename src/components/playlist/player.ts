@@ -47,7 +47,7 @@ export class Analyser {
         const audioSourceNode = Howler.masterGain ;
 
         AnalyserInstance = context.createAnalyser();
-        AnalyserInstance.fftSize = DIMENSIONS.EQUALIZER_FREG;
+        AnalyserInstance.fftSize = 128;
 
         const bufferLength = AnalyserInstance.frequencyBinCount;
         this.dataArray = new Uint8Array(bufferLength);

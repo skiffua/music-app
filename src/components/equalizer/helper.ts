@@ -7,7 +7,7 @@ export class RectangleEqualizer {
     private width = NaN;
     private height = NaN;
     private freq = DIMENSIONS.EQUALIZER_FREG;
-    private border = 1;
+    private colMargin = 4;
     private picHeight = 2;
     private picJump = 20;
     private picSpeed = 1;
@@ -46,8 +46,8 @@ export class RectangleEqualizer {
 
         console.log('this.width', this.width, this.height);
 
-        const recWidth = (this.width - (this.freq + 1) * this.border) / this.freq;
-        const halfCanvas = this.width / 2;
+        const recWidth = ~~((this.width - (this.freq + 1) * this.colMargin) / this.freq);
+        const halfCanvas = ~~(this.width / 2);
 
         if (this.ctx) {
             // this.ctx.save();
@@ -92,21 +92,21 @@ export class RectangleEqualizer {
                 // this.ctx.rect(halfCanvas - this.border * i - recWidth * (i + 1), recY, recWidth, reqHeight);
                 // pics
                 this.ctx.fillStyle = 'blue';
-                // console.log(this.width, halfCanvas + this.border * (i + 1) + recWidth * i, recY - 10, recWidth, this.picHeight)
+                // console.log(halfCanvas, picY, recWidth, this.picHeight);
                 // this.ctx.fillRect(halfCanvas + this.border * (i + 1) + recWidth * i, recY - 10, recWidth, this.picHeight);
                 if (defaultPicsPosition[i] > picY) {
-                    this.ctx.clearRect(halfCanvas + this.border * (i + 1) + recWidth * i, picY + this.picHeight, recWidth, this.height - picY - this.picHeight);
-                    this.ctx.clearRect(halfCanvas - this.border * i - recWidth * (i + 1), picY + this.picHeight, recWidth, this.height - picY - this.picHeight);
+                    this.ctx.clearRect(halfCanvas + this.colMargin * (i + 1) + recWidth * i, picY + this.picHeight, recWidth, this.height - picY - this.picHeight);
+                    this.ctx.clearRect(halfCanvas - this.colMargin * i - recWidth * (i + 1), picY + this.picHeight, recWidth, this.height - picY - this.picHeight);
 
-                    this.ctx.fillRect(halfCanvas + this.border * (i + 1) + recWidth * i, picY, recWidth, this.picHeight);
-                    this.ctx.fillRect(halfCanvas - this.border * i - recWidth * (i + 1), picY, recWidth, this.picHeight);
+                    this.ctx.fillRect(halfCanvas + this.colMargin * (i + 1) + recWidth * i, picY, recWidth, this.picHeight);
+                    this.ctx.fillRect(halfCanvas - this.colMargin * i - recWidth * (i + 1), picY, recWidth, this.picHeight);
                     defaultPicsPosition[i] = picY;
                 } else {
-                    this.ctx.clearRect(halfCanvas + this.border * (i + 1) + recWidth * i, 0, recWidth, defaultPicsPosition[i]);
-                    this.ctx.clearRect(halfCanvas - this.border * i - recWidth * (i + 1), 0, recWidth, defaultPicsPosition[i]);
+                    this.ctx.clearRect(halfCanvas + this.colMargin * (i + 1) + recWidth * i, 0, recWidth, defaultPicsPosition[i]);
+                    this.ctx.clearRect(halfCanvas - this.colMargin * i - recWidth * (i + 1), 0, recWidth, defaultPicsPosition[i]);
 
-                    this.ctx.fillRect(halfCanvas + this.border * (i + 1) + recWidth * i, defaultPicsPosition[i], recWidth, this.picHeight);
-                    this.ctx.fillRect(halfCanvas - this.border * i - recWidth * (i + 1), defaultPicsPosition[i], recWidth, this.picHeight);
+                    this.ctx.fillRect(halfCanvas + this.colMargin * (i + 1) + recWidth * i, defaultPicsPosition[i], recWidth, this.picHeight);
+                    this.ctx.fillRect(halfCanvas - this.colMargin * i - recWidth * (i + 1), defaultPicsPosition[i], recWidth, this.picHeight);
                     defaultPicsPosition[i] = defaultPicsPosition[i] < this.height - this.picHeight ?
                         defaultPicsPosition[i] + this.picSpeed : this.height - this.picHeight;
                 }
