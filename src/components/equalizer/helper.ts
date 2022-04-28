@@ -10,6 +10,7 @@ export class RectangleEqualizer {
     private border = 1;
     private picHeight = 2;
     private picJump = 20;
+    private picSpeed = 1;
     private largeSize = 900;
 
     constructor(ctx: CanvasRenderingContext2D, width: number, height: number) {
@@ -18,39 +19,32 @@ export class RectangleEqualizer {
     }
 
     private updateDimensions(width: number, height: number): void {
-        console.log('updateDimensions', width);
+        this.ctx.clearRect(0, 0, width, height);
 
         this.width = width;
         this.height = height;
-
-        // console.log(width, height);
-        // if ( width > this.largeSize) {
-        //     this.border = 1;
-        // } else {
-        //     this.border = 0;
-        // }
     }
 
-    // fillBackground(): void {
-    //     const gradient = this.ctx.createLinearGradient(~~(this.width / 2), this.height, ~~(this.width / 2), 0);
-    //
-    //     // console.log(~~(this.width / 2), this.height, ~~(this.width / 2), 0);
-    //
-    //     gradient.addColorStop(0, '#038E16');
-    //     gradient.addColorStop(0.2, '#28B13B');
-    //     gradient.addColorStop(0.4, '#D3E331');
-    //     gradient.addColorStop(0.6, 'orange');
-    //     gradient.addColorStop(0.8, 'red');
-    //     gradient.addColorStop(1, 'black');
-    //
-    //     this.ctx.fillStyle = gradient;
-    //     this.ctx.fillRect(0, 0, this.width, this.height);
-    // }
+    fillBackground(): void {
+        const gradient = this.ctx.createLinearGradient(~~(this.width / 2), this.height, ~~(this.width / 2), 0);
 
-    rectangles(width, height, dataArray) {
+        // console.log(~~(this.width / 2), this.height, ~~(this.width / 2), 0);
+
+        gradient.addColorStop(0, '#038E16');
+        gradient.addColorStop(0.2, '#28B13B');
+        gradient.addColorStop(0.4, '#D3E331');
+        gradient.addColorStop(0.6, 'orange');
+        gradient.addColorStop(0.8, 'red');
+        gradient.addColorStop(1, 'black');
+
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.width, this.height);
+    }
+
+    rectangles(dataArray) {
         // this.updateDimensions(width, height);
 
-        console.log('this.width', this.width);
+        console.log('this.width', this.width, this.height);
 
         const recWidth = (this.width - (this.freq + 1) * this.border) / this.freq;
         const halfCanvas = this.width / 2;
@@ -86,9 +80,9 @@ export class RectangleEqualizer {
                 let picY;
 
                 if (recY - this.picHeight <= 0) {
-                    picY = 0
+                    picY = 0;
                 } else if (recY === this.height) {
-                    picY = 0
+                    picY = this.height - this.picHeight;
                 } else {
                     picY = recY - this.picJump;
                 }
@@ -99,15 +93,22 @@ export class RectangleEqualizer {
                 // pics
                 this.ctx.fillStyle = 'blue';
                 // console.log(this.width, halfCanvas + this.border * (i + 1) + recWidth * i, recY - 10, recWidth, this.picHeight)
-                this.ctx.fillRect(halfCanvas + this.border * (i + 1) + recWidth * i, recY - 10, recWidth, this.picHeight);
-                if (defaultPicsPosition[i] > recY) {
-                    // this.ctx.fillRect(halfCanvas + this.border * (i + 1) + recWidth * i, recY - 10, recWidth, this.picHeight);
-                    // this.ctx.fillRect(halfCanvas - this.border * i - recWidth * (i + 1), recY - 10, recWidth, this.picHeight);
+                // this.ctx.fillRect(halfCanvas + this.border * (i + 1) + recWidth * i, recY - 10, recWidth, this.picHeight);
+                if (defaultPicsPosition[i] > picY) {
+                    this.ctx.clearRect(halfCanvas + this.border * (i + 1) + recWidth * i, picY + this.picHeight, recWidth, this.height - picY - this.picHeight);
+                    this.ctx.clearRect(halfCanvas - this.border * i - recWidth * (i + 1), picY + this.picHeight, recWidth, this.height - picY - this.picHeight);
+
+                    this.ctx.fillRect(halfCanvas + this.border * (i + 1) + recWidth * i, picY, recWidth, this.picHeight);
+                    this.ctx.fillRect(halfCanvas - this.border * i - recWidth * (i + 1), picY, recWidth, this.picHeight);
                     defaultPicsPosition[i] = picY;
                 } else {
-                    // this.ctx.fillRect(halfCanvas + this.border * (i + 1) + recWidth * i, defaultPicsPosition[i], recWidth, this.picHeight);
-                    // this.ctx.fillRect(halfCanvas - this.border * i - recWidth * (i + 1), defaultPicsPosition[i], recWidth, this.picHeight);
-                    defaultPicsPosition[i] = defaultPicsPosition[i] + 1;
+                    this.ctx.clearRect(halfCanvas + this.border * (i + 1) + recWidth * i, 0, recWidth, defaultPicsPosition[i]);
+                    this.ctx.clearRect(halfCanvas - this.border * i - recWidth * (i + 1), 0, recWidth, defaultPicsPosition[i]);
+
+                    this.ctx.fillRect(halfCanvas + this.border * (i + 1) + recWidth * i, defaultPicsPosition[i], recWidth, this.picHeight);
+                    this.ctx.fillRect(halfCanvas - this.border * i - recWidth * (i + 1), defaultPicsPosition[i], recWidth, this.picHeight);
+                    defaultPicsPosition[i] = defaultPicsPosition[i] < this.height - this.picHeight ?
+                        defaultPicsPosition[i] + this.picSpeed : this.height - this.picHeight;
                 }
 
                 // this.ctx.fill();

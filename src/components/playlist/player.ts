@@ -1,6 +1,7 @@
 import { Howl, Howler } from 'howler';
 import {PlayerInterface} from "./types";
 import { SERVER_ROUTES } from '../../constants/api';
+import {DIMENSIONS} from "../equalizer/const";
 
 export let PlayerInstance: Howl | null = null;
 export let AnalyserInstance: AnalyserNode | null = null;
@@ -46,7 +47,7 @@ export class Analyser {
         const audioSourceNode = Howler.masterGain ;
 
         AnalyserInstance = context.createAnalyser();
-        AnalyserInstance.fftSize = 256;
+        AnalyserInstance.fftSize = DIMENSIONS.EQUALIZER_FREG;
 
         const bufferLength = AnalyserInstance.frequencyBinCount;
         this.dataArray = new Uint8Array(bufferLength);

@@ -23,6 +23,7 @@ const Equalizer = (props): any => {
         border: '0.0625rem solid #9c9c9c',
         borderRadius: '0.25rem',
         fillStyle: 'orange',
+        height: 150,
     };
 
     const isContext = (): boolean => {
@@ -33,13 +34,10 @@ const Equalizer = (props): any => {
 
     const handleResizeCanvasChange = (): void => {
         if (isContext()) {
-            let imageData = context.getImageData(0 , 0, canvas.current.width, canvas.current.height);
-
             canvas.current.width = canvas.current.offsetWidth;
             canvas.current.height = canvas.current.offsetHeight;
-            RectEq.updateDimensions(canvas.current.offsetWidth, canvas.current.offsetHeight);
 
-            context.putImageData(imageData, 0, 0);
+            RectEq.updateDimensions(canvas.current.offsetWidth, canvas.current.offsetHeight);
         }
     };
 
@@ -175,7 +173,7 @@ const Equalizer = (props): any => {
 
         window.requestAnimationFrame(() => {
             if (canvas && canvas.current) {
-                RectEq.rectangles(canvas.current.width, canvas.current.height, dataArray)
+                RectEq.rectangles(dataArray)
             }
         });
     }, [dataArray]);
