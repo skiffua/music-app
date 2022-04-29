@@ -108,9 +108,9 @@ export class RectangleEqualizer {
                     // this.ctx.clearRect(halfCanvas + this.colMargin * (i + 1) + recWidth * i, picY + this.picHeight, recWidth, this.height - picY - this.picHeight);
                     // this.ctx.clearRect(halfCanvas - this.colMargin * i - recWidth * (i + 1), picY + this.picHeight, recWidth, this.height - picY - this.picHeight);
 
-                    this.ctx.fillRect(halfCanvas + this.colMargin * (i + 1) + recWidth * i, picY - this.picHeight, recWidth, this.picHeight);
-                    // this.ctx.fillRect(halfCanvas - this.colMargin * i - recWidth * (i + 1), picY, recWidth, this.picHeight);
-                    defaultPicsPosition[i] = picY - this.picHeight;
+                    this.ctx.fillRect(halfCanvas + this.colMargin * (i + 1) + recWidth * i, defaultPicsPosition[i] , recWidth, this.picHeight);
+                    this.ctx.fillRect(halfCanvas - this.colMargin * i - recWidth * (i + 1), defaultPicsPosition[i], recWidth, this.picHeight);
+                    defaultPicsPosition[i] = picY;
                 } else {
                     defaultPicsPosition[i] = defaultPicsPosition[i] + this.picSpeed;
 
@@ -118,7 +118,7 @@ export class RectangleEqualizer {
                     // this.ctx.clearRect(halfCanvas - this.colMargin * i - recWidth * (i + 1), 0, recWidth, defaultPicsPosition[i]);
                     //
                     this.ctx.fillRect(halfCanvas + this.colMargin * (i + 1) + recWidth * i, defaultPicsPosition[i], recWidth, this.picHeight);
-                    // this.ctx.fillRect(halfCanvas - this.colMargin * i - recWidth * (i + 1), defaultPicsPosition[i], recWidth, this.picHeight);
+                    this.ctx.fillRect(halfCanvas - this.colMargin * i - recWidth * (i + 1), defaultPicsPosition[i], recWidth, this.picHeight);
                     // defaultPicsPosition[i] = defaultPicsPosition[i] < this.height - this.picHeight ?
                     //     defaultPicsPosition[i] + this.picSpeed : this.height - this.picHeight;
                     // defaultPicsPosition[i] = defaultPicsPosition[i] + this.picSpeed;
