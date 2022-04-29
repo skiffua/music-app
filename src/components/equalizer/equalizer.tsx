@@ -63,7 +63,7 @@ const Equalizer = (props): any => {
     const drawEqualByInterval = () => {
         const intervalId = setInterval(() => {
             setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
-        }, 500);
+        }, 50);
         intervalRef.current = intervalId;
     };
 
