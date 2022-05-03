@@ -57,9 +57,19 @@ export class RectangleEqualizer {
                 initialPicsPosition[j] = initialJump;
                 const speed = 30;
 
+                // y = a (x - h) 2 + k
+
+                console.log('x0, y0', this.colMargin * (j + 1) + recWidth * j, initialPicsPosition[j], this.colMargin * (j + 1) + recWidth * j, initialPicsPosition[j], '********');
+
                 for (let k = 0; k <= ~~(this.freq); k++) {
                     if (k < j) {
-                        const step: number = initialJump + speed + k < this.height - this.picHeight ? initialJump + speed + k : this.height - this.picHeight;
+                        const x0 = this.colMargin * (j + 1) + recWidth * j;
+                        const x = this.colMargin * (k + 1) + recWidth * k;
+                        const y = ~~(1/80 *((x - x0) ** 2) + initialPicsPosition[j]);
+                        const step: number = y + this.picHeight < this.height - this.picHeight ? y + this.picHeight : this.height - this.picHeight;
+
+                        console.log(x, y, !!(y + this.picHeight), step);
+
                         initialPicsPosition[k] = step;
                     }
 
@@ -68,7 +78,7 @@ export class RectangleEqualizer {
                     //     initialPicsPosition[k] = step
                     // }
 
-                    console.log(initialPicsPosition)
+                    // console.log(initialPicsPosition)
 
 
                     // if (initialPicsPosition[j - k ] !== undefined && initialPicsPosition[j - k ] + 3 < this.height - this.picHeight) {
@@ -162,7 +172,7 @@ export class RectangleEqualizer {
                     defaultJumping();
                 }
             });
-        }, 5000);
+        }, 150);
     }
 
     rectangles(dataArray) {
