@@ -41,17 +41,11 @@ const Equalizer = (props): any => {
         }
     };
 
-    // useEffect(() => {
-    //     console.log('onResizeInterval', onResizeInterval);
-    //
-    //     if (!onResizeInterval) {
-    //         setTimeout(() => {
-    //             setOnResizeInterval(true);
-    //             onResizeWindow();
-    //             console.log('resize');
-    //         }, 5000);
-    //     }
-    // }, [onResizeInterval]);
+    useEffect(() => {
+        if (RectEq) {
+            RectEq.initialJumps();
+        }
+    }, [RectEq]);
 
 
     const onResizeWindow = () => {
@@ -87,8 +81,6 @@ const Equalizer = (props): any => {
     };
 
     const onPlaySongHandler = (e) => {
-        console.log('onPlaySong', e);
-
         clearFreqUpdate();
 
         sound = Player.getInstance();
@@ -208,7 +200,7 @@ const Equalizer = (props): any => {
              <Card.Body
                  className="p-2"
              >
-                 <canvas ref={canvas} className="canvas" style={styles}/>
+                 <canvas ref={canvas} className="canvas"/>
              </Card.Body>
          </Card>
         );
