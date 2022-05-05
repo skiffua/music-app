@@ -18,6 +18,7 @@ const Equalizer = (props): any => {
 
     const ref = useRef({ current: null });
     const intervalRef = useRef(null);
+    const intervalToDefaultRef = useRef(null);
 
     const styles = {
         border: '0.0625rem solid #9c9c9c',
@@ -43,14 +44,11 @@ const Equalizer = (props): any => {
 
     useEffect(() => {
         if (RectEq) {
-            RectEq.initialJumps();
+            RectEq.initialJumps(1000);
         }
     }, [RectEq]);
 
-
     const onResizeWindow = () => {
-        console.log('onResizeWindow');
-
         setOnResizeInterval(true);
     };
 
@@ -60,6 +58,23 @@ const Equalizer = (props): any => {
         }, 50);
         intervalRef.current = intervalId;
     };
+
+    // const dataArrayToDefaultByInterval = () => {
+    //     if (dataArray.some(el => el > 0)) {
+    //         setData(dataArray.map(el => {
+    //             if (el > 0) {
+    //                 el -= 1;
+    //             }
+    //
+    //             return el;
+    //         }))
+    //     }
+    //
+    //     // const intervalId = setInterval(() => {
+    //     //     setData(arr => Uint8Array.from(Analyser.getFrequency())) ;
+    //     // }, 50);
+    //     // intervalRef.current = intervalId;
+    // };
 
     const isEqualizerCanStart = (): boolean => {
         return document.visibilityState === 'visible' && !intervalRef.current && !!sound && sound.playing();
@@ -87,8 +102,6 @@ const Equalizer = (props): any => {
 
         if (sound) {
             sound.on('play', () => {
-                console.log('play');
-
                 Analyser.createAnalyser(sound);
 
                 if (isEqualizerCanStart()) {
@@ -101,14 +114,10 @@ const Equalizer = (props): any => {
             });
 
             sound.on('stop', () => {
-                console.log('stop');
-
                 clearFreqUpdate();
             });
 
             sound.on('end', () => {
-                console.log('end');
-
                 clearFreqUpdate();
             });
         }
@@ -129,15 +138,13 @@ const Equalizer = (props): any => {
     }, [canvas]);
 
     useEffect(() => {
-        console.log('onResizeInterval', onResizeInterval);
-
         if (onResizeInterval) {
             handleResizeCanvasChange();
 
             setTimeout(() => {
                 handleResizeCanvasChange();
                 setOnResizeInterval(false);
-            }, 5000);
+            }, 1000);
         } else {
             // setTimeout(() => {
             //     setOnResizeInterval(true);
@@ -147,8 +154,6 @@ const Equalizer = (props): any => {
     }, [onResizeInterval]);
 
     useEffect(() => {
-        console.log('context', context, onResizeInterval);
-
         if (context && canvas && canvas.current) {
             setRectEq(new RectangleEqualizer(context, canvas.current.width, canvas.current.height));
         }
@@ -156,23 +161,16 @@ const Equalizer = (props): any => {
 
     useEffect(() => {
         if (!isContext()) { return; }
-        // canvas.current.width = canvas.current.offsetWidth;
-        // canvas.current.height = canvas.current.offsetHeight;
-
-        // setInterval(() => {
-        //     context.fillRect(Math.floor(Math.random() * 100), Math.floor(Math.random() * 150), Math.floor(Math.random() * 1000), Math.floor(Math.random() * 150));
-        // }, 1000);
 
         window.requestAnimationFrame(() => {
             if (canvas && canvas.current) {
-                RectEq.rectangles(dataArray)
+                RectEq.drawSimpleRectangles(dataArray)
             }
         });
     }, [dataArray]);
 
     useEffect(() => {
         sound = Player.getInstance();
-        // setContext(canvas.current.getContext('2d'));
 
         if (isEqualizerCanStart()) {
             drawEqualByInterval();
@@ -189,7 +187,6 @@ const Equalizer = (props): any => {
 
             document.removeEventListener('visibilitychange', documentVisibilityHandling);
             eventBus.remove('onPlaySong', onPlaySongHandler);
-            // console.log(document)
         }
     }, []);
 

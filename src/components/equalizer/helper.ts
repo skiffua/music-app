@@ -15,6 +15,7 @@ export class RectangleEqualizer {
     private largeSize = 900;
 
     private initialState = true;
+    private initialDefaultJumping = false;
 
     constructor(ctx: CanvasRenderingContext2D, width: number, height: number) {
         this.ctx = ctx;
@@ -42,12 +43,31 @@ export class RectangleEqualizer {
         this.ctx.fillRect(0, 0, this.width, this.height);
     }
 
-    initialJumps(): void {
+
+    async drawSimpleRectangles(dataArray: any): Promise<any> {
+        if (this.initialDefaultJumping) {
+            return;
+        }
+
+        if (this.initialState) {
+            await this.initialJumps(2500);
+        }
+
+        this.rectangles(dataArray);
+    }
+
+    async initialJumps(time: number = 15000): Promise<any> {
+        let interval;
         let initialJump = 80;
         let rightDirection = true;
         let downDirection = true;
-        let jumpedPic = 0;
+        let isTurnOff = false;
+        let jumpedPic = Math.floor(Math.random() * (this.freq + 1));
+
+        let resolveInitialJumping: (v?: any) => void;
         initialPicsPosition.fill(DIMENSIONS.EQUALIZER_HEIGHT - this.picHeight);
+
+        this.initialDefaultJumping = true;
 
         const defaultJumping = () => {
             const recWidth = ~~((this.width - (this.freq + 1) * this.colMargin) / this.freq);
@@ -88,23 +108,41 @@ export class RectangleEqualizer {
                     rightDirection = !rightDirection;
                 }
 
-                jumpedPic = rightDirection ? jumpedPic + 1 : jumpedPic - 1;
-                initialJump = downDirection ? initialJump + 2 : initialJump - 2;
+                jumpedPic = rightDirection || isTurnOff ? jumpedPic + 1 : jumpedPic - 1;
+                initialJump = downDirection || isTurnOff ? initialJump + 2 : initialJump - 2;
+
                 if (initialJump > this.height - this.picHeight - 5) {
                     downDirection = !downDirection;
+
+                    if (isTurnOff) {
+                        clearInterval(interval);
+                        this.initialState = false;
+                        this.initialDefaultJumping = false;
+
+                        resolveInitialJumping();
+                    }
                 } else if (initialJump < 80) {
                     downDirection = !downDirection;
                 }
             }
         };
 
-        setInterval(() => {
+        interval = setInterval(() => {
             window.requestAnimationFrame(() => {
                 if (this.ctx) {
                     defaultJumping();
                 }
             });
         }, 200);
+
+        setTimeout(() => {
+            isTurnOff = true;
+            // clearInterval(interval);
+        }, time);
+
+        return new Promise((resolve) => {
+            resolveInitialJumping = resolve;
+        })
     }
 
     rectangles(dataArray) {
