@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {Container} from "react-bootstrap";
@@ -12,6 +12,7 @@ import {SERVER_ROUTES} from "../constants/api";
 
 const Header = (props) => {
     const [{ response }, doFetch] = useFetch();
+    let location = useLocation();
 
     useEffect(() => {
             doFetch(SERVER_ROUTES.SONGS, { method: 'get'});
@@ -23,10 +24,15 @@ const Header = (props) => {
         },
         [response]);
 
+    useEffect(() => {
+            console.log('change', location);
+            const { pathname } = location;
+        }, [location]);
+
     return (
         <Navbar bg="dark" variant="dark" expand="sm">
             <Container>
-                <Navbar.Brand href="/">Гарбуз</Navbar.Brand>
+                { location.pathname !== '/' && <Navbar.Brand href="/">Гарбуз</Navbar.Brand> }
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
                     <Nav className="ml-auto">
