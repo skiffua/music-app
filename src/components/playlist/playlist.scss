@@ -1,0 +1,23 @@
+@import '../../styles/_variables.scss';
+
+$player-button-size: 40px;
+
+@mixin hoverButton($image) {
+    background-image: url($image), radial-gradient(circle, white 10%, $main-brown-lighten 80%);
+}
+
+@mixin backgroundButton($image) {
+    background-image: url($image);
+    &:hover {
+        @include hoverButton($image);
+    }
+    &.is-checked {
+        @include hoverButton($image);
+        box-shadow: 0 0 10px $main-darken;
+    }
+
+}
+
+.list-group {
+    height: calc(100% - #{$player-block-controls-height});
+}

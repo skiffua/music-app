@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+package-lock.json
 
 # testing
 /coverage
@@ -12,6 +13,8 @@
 /build
 /dist
 /.idea
+/src/server/dist/index.js
+
 # misc
 .DS_Store
 .env.local
@@ -25,4 +28,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # dotenv environment variables file
-.env
+.env.dev
+.env.prod
+
+# media files
+# .mp3

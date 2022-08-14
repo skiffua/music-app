@@ -13,7 +13,6 @@ const ifUserExist = async (connector, email, nick) => {
     } catch {
         return null;
     } finally {
-        console.log('user checked');
     }
 };
 
@@ -50,7 +49,7 @@ export const userRegister = async (req, res) => {
           connector.end();
       }
       } catch (e) {
-          console.log('registration failed', e);
+
           res.send({
               message: 'sorry but user NOT register, please try again...'
           });
@@ -79,12 +78,10 @@ export const userLogin = async (req, res) => {
             });
         }
     } catch (e) {
-        console.log('logined failed', e);
         res.end('user NOT logined, connecting to db closed');
     } finally {
         if (connector) {
             connector.end();
         }
-        console.log('connection closed');
     }
 };

@@ -1,6 +1,9 @@
 const webpack = require("webpack");
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const env = process.env.NODE_ENV || 'development';
+
+console.log('ENV', env);
 
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
@@ -10,9 +13,15 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: path.join(__dirname, outputDirectory),
-        filename: 'bundle.js'
+        filename: '[name].js',
+        sourceMapFilename: "[name].js.map"
     },
     target: 'web',
+
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js'],
+        fallback: { crypto: false },
+    },
 
     module: {
         rules: [
@@ -21,6 +30,13 @@ module.exports = {
                 exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'babel-loader'
+                }
+            },
+            {
+                test: /\.tsx?$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'ts-loader'
                 }
             },
             {
@@ -37,14 +53,23 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"]
-            }
+            },
+            {
+                test: /\.(webp|png|jpe?g|gif)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                    },
+                ],
+            },
         ]
     },
     devServer: {
+        host: '0.0.0.0',
         port: 3000,
         historyApiFallback: true,
-        compress: true,
-        disableHostCheck: true
+        // compress: true,
+        // disableHostCheck: true
     },
     devtool: false,
     plugins: [
@@ -53,8 +78,10 @@ module.exports = {
             favicon: './public/favicon.ico'
         }),
         new webpack.SourceMapDevToolPlugin({
-            filename: 'sourcemaps/source.js.map',
+            filename: 'sourcemaps/[file].map',
         }),
-        new Dotenv()
-    ]
+        new Dotenv({
+            path: `./.env.${env === "production" ? "prod" : "dev"}`,
+        })
+    ],
 };

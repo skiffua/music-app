@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import {useMatch} from "react-router-dom";
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
@@ -22,9 +23,10 @@ import { CurrentUserContext } from '../context/currentUser';
 const Authentication = props => {
     const [password, setPassword] = useState('');
     const [isLoginPath, setPath] = useState(true);
-    const [{isLoading, response, error}, doFetch] = useFetch(isLoginPath ? SERVER_ROUTES.LOGIN : SERVER_ROUTES.REGISTER );
+    const [{isLoading, response, error}, doFetch] = useFetch();
     const [fetchResult, setResult] = useState(null);
     const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
+    const matchLogin = useMatch('/login');
 
     const register = () => {
         if (!error) {
@@ -86,7 +88,7 @@ const Authentication = props => {
     };
 
     useEffect(() => {
-        setPath(props.match.path === '/login')
+        setPath(!!matchLogin)
     });
 
     useEffect(() => {
@@ -114,10 +116,10 @@ const Authentication = props => {
 
         if (isLoginPath) {
             setPassword(password);
-            doFetch(loginData);
+            doFetch(SERVER_ROUTES.LOGIN, loginData);
         } else {
-            doFetch(registerData);
-        };
+            doFetch(SERVER_ROUTES.REGISTER, registerData);
+        }
     };
 
     const equalTo = (ref, msg) => {
@@ -150,13 +152,13 @@ const Authentication = props => {
     return (
         <Container className="mt-3">
             <Formik
-                initialValues={
+                initialValues = {
                    Object.assign({
                        email: '',
                        password: ''},
                        isLoginPath && registerFields)
                 }
-                validationSchema={Yup.object(
+                validationSchema = {Yup.object(
                     Object.assign({
                         email: Yup.string()
                             .email('Електронна пошта введено не вірно')
@@ -182,8 +184,7 @@ const Authentication = props => {
                                 .required('Повторіть будь ласка пароль')
                         })
                 )}
-                onSubmit={ onSubmit }
-                onChange={ (e) => {console.log(e)}}
+                onSubmit = { onSubmit }
 
             >
                 <Form

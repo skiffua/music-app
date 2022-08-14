@@ -2,3 +2,19 @@
 
 @import '~bootstrap/scss/bootstrap';
 
+
+body {
+  height: 100vh;
+  background: black;
+}
+
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-homepage {
+  text-align: center;
+}

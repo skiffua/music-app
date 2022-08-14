@@ -1,10 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Pangolin&display=swap');
 //theme colors
 $main-lighten: #c5cbe3;
-$main-darken: #4056a1;
+$main-darken: #264653;
 $main-brown: #d79922;
+$main-violet: #f4a261;
+$main-red: #2a9d8f;
+$main-brown-lighten: #efe2ba;
 
 $main-green: #235f39;
+
+// dimensions
+$player-block-controls-height: 50px;
 
 // owerite bootstrap
 $gray-800: $main-darken;
