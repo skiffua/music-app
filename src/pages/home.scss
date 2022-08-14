@@ -27,8 +27,22 @@
         }
     }
 
+    &-sub-title {
+        font-size: 60px;
+        font-weight: bold;
+        font-stretch: 200%;
+        //position: relative;
+
+        .homepage-sub-title-letter {
+            //position: absolute;
+            display: inline-block;
+        }
+    }
+
     &-smoke {
         z-index: 99;
+        transform: scale3d(1.3, 1.3, 1.3);
+        //bottom: -80%;
     }
 
     &-smoke-lighten {

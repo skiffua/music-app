@@ -18,25 +18,33 @@ function App() {
         });
     }, []);
 
-    if (!isAllDataLoaded) { return (
-      <CurrentUserProvider>
-        <BrowserRouter>
-            <Header/>
-            <Routes />
-        </BrowserRouter>
-      </CurrentUserProvider>
-  )} else {
-        return (<div className="main-homepage">
-            <picture>
-                <source srcSet={`${pumpingWebpImg}`}
-                        type="image/webp" />
-                <img className="pumping"
-                     alt="pumping" src={pumpingWebpImg}
-                     srcSet={`${pumpingWebpImg}`}/>
-
-            </picture>
-        </div>)
-    }
+  //   if (!isAllDataLoaded) { return (
+  //     <CurrentUserProvider>
+  //       <BrowserRouter>
+  //           <Header/>
+  //           <Routes />
+  //       </BrowserRouter>
+  //     </CurrentUserProvider>
+  // )} else {
+  //       return (<div className="main-homepage">
+  //           <picture>
+  //               <source srcSet={`${pumpingWebpImg}`}
+  //                       type="image/webp" />
+  //               <img className="pumping"
+  //                    alt="pumping" src={pumpingWebpImg}
+  //                    srcSet={`${pumpingWebpImg}`}/>
+  //
+  //           </picture>
+  //       </div>)
+  //   }
+    return (
+        <CurrentUserProvider>
+            <BrowserRouter>
+                <Header/>
+                <Routes />
+            </BrowserRouter>
+        </CurrentUserProvider>
+    )
 }
 
 export default App;
