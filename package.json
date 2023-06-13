@@ -49,7 +49,7 @@
     "client": "webpack-dev-server --mode development --config webpack.config.js",
     "server": "babel-watch ./src/server/index.js",
     "build:server": "webpack --mode production --config ./src/server/server.config.js",
-    "f+b": "npm run server && npm run client",
+    "start": "npm run server && npm run client",
     "build:client": "webpack --mode production --config webpack.config.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
